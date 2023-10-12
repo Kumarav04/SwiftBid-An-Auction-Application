@@ -1,7 +1,7 @@
 package model;
 
 
-// Represents a user of the application
+// Represents a user of the application with a username, password and an AuctionManager object.
 public class User {
     private String userName;
     private String passWord;

@@ -41,8 +41,9 @@ public class UserTest {
     @Test
     void testCreateAccountExists() {
         testUserManager = new UserManager();
-        testUser.createAccount("newUser2","password", testUserManager);
+        assertTrue(testUser.createAccount("newUser2","password", testUserManager));
         assertFalse(testUser.createAccount("newUser2","password", testUserManager));
+        assertFalse(testUser.createAccount("newUser2", "newPassword",testUserManager));
 
     }
 

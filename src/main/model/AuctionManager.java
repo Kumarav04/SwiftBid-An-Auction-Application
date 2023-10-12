@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+// Handles a list of all Auctions currently listed in the platform
 public class AuctionManager {
     private List<Auction> auctions;
 

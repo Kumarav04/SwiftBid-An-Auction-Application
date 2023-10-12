@@ -1,5 +1,7 @@
 package model;
 
+
+// Represents an Auction with a listing name, seller name, highest bid and highest bidder.
 public class Auction {
     private String listingName;
     private User seller;

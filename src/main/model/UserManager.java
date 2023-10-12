@@ -2,8 +2,9 @@ package model;
 
 import java.util.ArrayList;
 import java.util.List;
-import model.User;
 
+
+// Handles all User creation and management.
 public class UserManager {
     private List<User> allUsers;
 
