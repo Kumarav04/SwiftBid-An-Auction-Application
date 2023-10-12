@@ -121,29 +121,34 @@ public class SwiftBidApp {
 
     // MODIFIES: this
     // EFFECTS: handles auction and bidding mechanism
-    private void auctionMechanism() {
+    private void auctionMechanism(List<Auction> auctions) {
         System.out.print("Enter the name of the auction you want to bid on: ");
         String auctionToBidOn = scanner.nextLine();
         System.out.print("Enter your bid: ");
         double bidAmount = Double.parseDouble(scanner.nextLine());
-        for (Auction auction : auctionManager.getAuctions()) {
+        boolean foundAuction = false;
+        for (Auction auction : auctions) {
             if (auction.getListingName().equalsIgnoreCase(auctionToBidOn)) {
                 if (auction.getSeller().equals(currentUser.getUserName())) {
                     System.out.println("Seller cannot place bids on their own listings.");
-                    break;
                 } else {
-                    if (currentUser.placeBid(auction, bidAmount)) {
-                        System.out.println("Successfully Placed Bid!");
-                    } else {
-                        System.out.println("Failed to Place Bid. Your bid must be higher "
-                                + "than the current highest bid.");
-                    }
+                    verifyBid(bidAmount, auction);
+                    foundAuction = true;
                     break;
                 }
-            } else {
-                System.out.println("Listing not found");
-                break;
             }
+        }
+        if (!foundAuction) {
+            System.out.println("Listing not found");
+        }
+    }
+
+    private void verifyBid(double bidAmount, Auction auction) {
+        if (currentUser.placeBid(auction, bidAmount)) {
+            System.out.println("Successfully Placed Bid!");
+        } else {
+            System.out.println("Failed to Place Bid. Your bid must be higher "
+                    + "than the current highest bid.");
         }
     }
 
@@ -158,11 +163,11 @@ public class SwiftBidApp {
             if (auctions.isEmpty()) {
                 System.out.println("No listings available.");
             } else {
-                for (Auction auction : auctionManager.getAuctions()) {
+                for (Auction auction : auctions) {
                     System.out.println("Auction: " + auction.getListingName()
                             + ", Current Highest Bid: " + auction.getHighestBid());
                 }
-                auctionMechanism();
+                auctionMechanism(auctions);
             }
         }
     }
