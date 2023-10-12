@@ -8,10 +8,10 @@ public class AuctionTest {
     private Auction testAuction;
     private User testUser;
     private AuctionManager testAuctionManager;
-    private UserManager testUserManager;
 
     @BeforeEach
     void runBefore() {
+        testAuctionManager = new AuctionManager();
         testUser = new User("newUser", "newPassword", testAuctionManager);
         testAuction = new Auction("newListing", testUser);
     }
@@ -21,7 +21,7 @@ public class AuctionTest {
         assertEquals("newListing", testAuction.getListingName());
         assertEquals("newUser",testAuction.getSeller());
         assertEquals(0,testAuction.getHighestBid());
-        assertEquals(null,testAuction.getHighestBidder());
+        assertNull(testAuction.getHighestBidder());
     }
 
     @Test
