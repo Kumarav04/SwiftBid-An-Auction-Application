@@ -9,7 +9,7 @@ or without a reserve. This guarantees a customised auction experience.
 With SwiftBid, users may directly participate 
 in the auction process, making bids to compete and 
 eventually make purchases, making the auctions effective
-and achieving successful saves
+and achieving successful sales.
 
 The concept behind this initiative is to give all types 
 of buyers and sellers a platform where they can connect 
