@@ -22,6 +22,8 @@ public class AuctionTest {
         assertEquals("newUser",testAuction.getSeller());
         assertEquals(0,testAuction.getHighestBid());
         assertNull(testAuction.getHighestBidder());
+        testAuction.placeBid(testUser,500.0);
+        assertEquals(testUser,testAuction.getHighestBidder());
     }
 
     @Test
@@ -32,6 +34,29 @@ public class AuctionTest {
         assertTrue(testAuction.placeBid(testUser1,150.0));
         assertEquals("newUser2",testAuction.getHighestBidder().getUserName());
         assertEquals(150.0,testAuction.getHighestBid());
+    }
+
+
+    @Test
+    void testPlaceBidBelowCurrentHighestBid() {
+        testAuction.placeBid(testUser, 100.0);
+        assertFalse(testAuction.placeBid(testUser, 50.0));
+    }
+
+    @Test
+    void testPlaceBidEqualCurrentHighestBid() {
+        assertTrue(testAuction.placeBid(testUser, 100.0));
+        assertFalse(testAuction.placeBid(testUser, 100.0));
+        assertEquals(testUser, testAuction.getHighestBidder());
+    }
+
+    @Test
+    void testPlaceBidWithDifferentUsers() {
+        User testUser1 = new User("newUser2", "newPassword", testAuctionManager);
+        assertTrue(testAuction.placeBid(testUser, 100.0));
+        assertTrue(testAuction.placeBid(testUser1, 150.0));
+        assertEquals("newUser2", testAuction.getHighestBidder().getUserName());
+        assertEquals(150.0, testAuction.getHighestBid());
     }
 
 }

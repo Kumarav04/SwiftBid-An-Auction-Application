@@ -27,11 +27,38 @@ public class AuctionManagerTest {
     void testRemoveAuction() {
         auctionManager.removeAuction(testAuction1);
         assertEquals(0, auctionManager.getAuctions().size());
+        auctionManager.removeAuction(testAuction2);
+        assertEquals(0, auctionManager.getAuctions().size());
     }
 
     @Test
     void testGetAuctions() {
         assertEquals(1, auctionManager.getAuctions().size());
+        auctionManager.addAuction(testAuction2);
         assertEquals(testAuction1, auctionManager.getAuctions().get(0));
+        assertEquals(testAuction2, auctionManager.getAuctions().get(1));
+    }
+
+    @Test
+    void testRemoveAuctionNonexistent() {
+        Auction nonExistentAuction = new Auction("NonExistentAuction", null);
+        auctionManager.removeAuction(nonExistentAuction);
+        assertEquals(1, auctionManager.getAuctions().size());
+    }
+
+    @Test
+    void testGetAuctionsEmptyList() {
+        AuctionManager emptyAuctionManager = new AuctionManager();
+        assertEquals(0, emptyAuctionManager.getAuctions().size());
+    }
+
+    @Test
+    void testGetAuctionsModifiedList() {
+        auctionManager.addAuction(testAuction2);
+        assertEquals(2, auctionManager.getAuctions().size());
+
+        auctionManager.removeAuction(testAuction1);
+        assertEquals(1, auctionManager.getAuctions().size());
+        assertEquals(testAuction2, auctionManager.getAuctions().get(0));
     }
 }

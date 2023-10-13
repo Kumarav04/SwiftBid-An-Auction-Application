@@ -22,7 +22,7 @@ public class UserManager {
         return false;
     }
 
-    // EFFECTS: Authenticates and returns true of user already exists and passwords match, else false
+    // EFFECTS: Authenticates and returns true if user already exists and passwords match, else false
     public boolean authenticate(String username, String password) {
         for (User user  : allUsers) {
             if (user.getUserName().equals(username)) {
