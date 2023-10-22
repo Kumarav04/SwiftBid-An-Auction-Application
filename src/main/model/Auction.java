@@ -7,14 +7,16 @@ public class Auction {
     private User seller;
     private double highestBid;
     private User highestBidder;
+    private String description;
 
 
     // EFFECTS: Constructs an Auction with given listing name, and user
-    public Auction(String listingName, User seller) {
+    public Auction(String listingName, User seller, String description) {
         this.listingName = listingName;
         this.seller = seller;
         this.highestBid = 0.0;
         this.highestBidder = null;
+        this.description = description;
     }
 
     // EFFECTS: returns the listing name
@@ -35,6 +37,10 @@ public class Auction {
     // EFFECTS: returns the highest bidder as a User object.
     public User getHighestBidder() {
         return highestBidder;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     // REQUIRES: bid > 0

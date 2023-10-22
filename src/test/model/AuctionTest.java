@@ -13,7 +13,7 @@ public class AuctionTest {
     void runBefore() {
         testAuctionManager = new AuctionManager();
         testUser = new User("newUser", "newPassword", testAuctionManager);
-        testAuction = new Auction("newListing", testUser);
+        testAuction = new Auction("newListing", testUser, "newDesc");
     }
 
     @Test

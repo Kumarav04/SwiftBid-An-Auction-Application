@@ -30,4 +30,5 @@ public class AuctionManager {
     public List<Auction> getAuctions() {
         return auctions;
     }
+
 }

@@ -44,6 +44,10 @@ public class SwiftBidApp {
                         removeListing();
                         continuation();
                         break;
+                    case "6":
+                        wishlists();
+                        continuation();
+                        break;
                     case "X":
                         exitApp();
                     default:
@@ -84,6 +88,17 @@ public class SwiftBidApp {
         }
     }
 
+    private void auctionDisplayer(List<Auction> auctions) {
+        for (Auction auction : auctions) {
+            System.out.println("Listing: " + auction.getListingName()
+                    + "\nSeller: " + auction.getSeller()
+                    + "\nDescription: " + auction.getDescription()
+                    + "\nCurrent Highest Bid: " + auction.getHighestBid()
+                    + "\nHighest Bidder: " + ((auction.getHighestBidder())
+                    != null ? auction.getHighestBidder().getUserName() : "None") + "\n");
+        }
+    }
+
 
     // EFFECTS: Displays all the listings currently posted
     private void browse() {
@@ -94,16 +109,59 @@ public class SwiftBidApp {
             if (auctions.isEmpty()) {
                 System.out.println("No listings available.");
             } else {
-                for (Auction auction : auctions) {
-                    System.out.println("Listing: " + auction.getListingName()
-                            + " Seller: " + auction.getSeller()
-                            + ", Current Highest Bid: " + auction.getHighestBid()
-                            + ", Highest Bidder: " + (auction.getHighestBidder()
-                            != null ? auction.getHighestBidder().getUserName() : "None"));
+                auctionDisplayer(auctions);
+                wishlisting(auctions);
+            }
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Adds an item to currentUser's wishlist
+    private void wishlisting(List<Auction> auctions) {
+        System.out.println("Enter \"Wishlist\" to save an auction to your"
+                + " wish list, else press enter to continue");
+        System.out.print("Enter input: ");
+        String wishlist = scanner.nextLine();
+        if (wishlist.equalsIgnoreCase("wishlist")) {
+            System.out.println("Enter the name of the auction you would like to add to your wish list");
+            String wishlistName = scanner.nextLine();
+            for (Auction auction : auctions) {
+                if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
+                    currentUser.addToWishList(auction,auctions);
+                    System.out.println("Item added to Wishlist successfully!");
+                } else {
+                    System.out.println("Auction not found");
                 }
             }
         }
     }
+
+
+    // MODIFIES: this
+    // EFFECTS: Allows user to view and delete items on their wishlist
+    private void wishlists() {
+        if (currentUser == null) {
+            System.out.println("Please create/login as a user first.");
+        } else {
+            List<Auction> wishlist = currentUser.getWishlist();
+            auctionDisplayer(wishlist);
+            System.out.println("Press D if you would like to delete an item from your wish list.");
+            String delete = scanner.nextLine();
+            if (delete.equalsIgnoreCase("D")) {
+                System.out.println("Enter the name of the auction you would like to delete from your wish list");
+                String wishlistName = scanner.nextLine();
+                for (Auction auction : wishlist) {
+                    if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
+                        currentUser.removeFromWishList(auction);
+                        System.out.println("Item removed from Wishlist successfully!");
+                    } else {
+                        System.out.println("Auction not found");
+                    }
+                }
+            }
+        }
+    }
+
 
     // MODIFIES: this
     // EFFECTS: Creates a new listing from currentUser
@@ -113,7 +171,9 @@ public class SwiftBidApp {
         } else {
             System.out.print("Enter the name of your auction: ");
             String auctionName = scanner.nextLine();
-            if (currentUser.createListing(auctionName)) {
+            System.out.print("Enter the description of your auction: ");
+            String itemDesc = scanner.nextLine();
+            if (currentUser.createListing(auctionName, itemDesc)) {
                 System.out.println("Listing Successfully created!");
             }
         }
@@ -165,7 +225,8 @@ public class SwiftBidApp {
             } else {
                 for (Auction auction : auctions) {
                     System.out.println("Auction: " + auction.getListingName()
-                            + ", Current Highest Bid: " + auction.getHighestBid());
+                            + "\nDescription: " + auction.getDescription()
+                            + "\nCurrent Highest Bid: " + auction.getHighestBid());
                 }
                 auctionMechanism(auctions);
             }
@@ -231,6 +292,7 @@ public class SwiftBidApp {
         System.out.println("3. Post a new Auction");
         System.out.println("4. Place a Bid");
         System.out.println("5. Delete a Listing");
+        System.out.println("6. View Wishlist");
         System.out.println("\nX. Exit Application");
         System.out.print("\nEnter your Option: ");
     }

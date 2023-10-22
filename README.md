@@ -45,7 +45,10 @@ the buyers and the sellers.
 - As a user, I want to be able to delete a classified
 - As a user, I want to be able to open and view the details of each classified
 - As a user, I want to be able to place a bid on a classified
-- As a user, I want to be able to edit and make changes to the specifics of a posting
-
+- As a user, I want to be able to create a wish list of selective auctions currently active.
+- As a user, I want to be reminded to save my wish list before I quit the application
+- As a user, I want to be able to access my saved wish list at any time
+- As a user, I want to be able to see currently active listings even after restarting the application
+- As a user, I want to be able to be authenticated as a registered user even after restarting the application.
 
 

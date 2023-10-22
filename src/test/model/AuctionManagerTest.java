@@ -12,8 +12,8 @@ public class AuctionManagerTest {
     @BeforeEach
     void runBefore() {
         auctionManager = new AuctionManager();
-        testAuction1 = new Auction("Auction1", null);
-        testAuction2 = new Auction("Auction2", null);
+        testAuction1 = new Auction("Auction1", null,"desc1");
+        testAuction2 = new Auction("Auction2", null,"desc1");
         auctionManager.addAuction(testAuction1);
     }
 
@@ -41,7 +41,7 @@ public class AuctionManagerTest {
 
     @Test
     void testRemoveAuctionNonexistent() {
-        Auction nonExistentAuction = new Auction("NonExistentAuction", null);
+        Auction nonExistentAuction = new Auction("NonExistentAuction", null, "NonExistentDesc");
         auctionManager.removeAuction(nonExistentAuction);
         assertEquals(1, auctionManager.getAuctions().size());
     }

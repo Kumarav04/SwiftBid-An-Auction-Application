@@ -29,7 +29,7 @@ public class UserTest {
 
     @Test
     void testCreateListing() {
-        assertTrue(testUser.createListing("New Auction"));
+        assertTrue(testUser.createListing("New Auction","DemoDescription"));
         assertEquals(1, testAuctionManager.getAuctions().size());
     }
 
@@ -51,7 +51,7 @@ public class UserTest {
 
     @Test
     void testPlaceBid() {
-        Auction auction = new Auction("Test Auction", testUser);
+        Auction auction = new Auction("Test Auction", testUser,"DemoDesc");
         testAuctionManager.addAuction(auction);
         assertTrue(testUser.placeBid(auction, 100.0));
         assertEquals(100.0, auction.getHighestBid());
@@ -61,7 +61,7 @@ public class UserTest {
 
     @Test
     void testPlaceBidInvalidBid() {
-        Auction auction = new Auction("Invalid Bid Auction", testUser);
+        Auction auction = new Auction("Invalid Bid Auction", testUser, "demoDesc");
         testAuctionManager.addAuction(auction);
         assertFalse(testUser.placeBid(auction, -10.0));
         assertEquals(0.0, auction.getHighestBid());
