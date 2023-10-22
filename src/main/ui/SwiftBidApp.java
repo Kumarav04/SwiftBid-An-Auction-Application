@@ -4,14 +4,26 @@ import model.Auction;
 import model.AuctionManager;
 import model.User;
 import model.UserManager;
+import persistence.AuctionManagerJsonWriter;
+import persistence.AuctionManagerReader;
+import persistence.UserManagerJsonWriter;
+import persistence.UserManagerReader;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 
 // Auction platform application
 public class SwiftBidApp {
-    private static final AuctionManager auctionManager = new AuctionManager();
-    private static final UserManager manager = new UserManager();
+    private static final String AUCTION_JSON = "./data/auctionmanager.json";
+    private static final String USER_JSON = "./data/usermanager.json";
+    private AuctionManager auctionManager;
+    private UserManager manager;
+    private AuctionManagerJsonWriter auctionWriter;
+    private AuctionManagerReader auctionReader;
+    private UserManagerJsonWriter userWriter;
+    private UserManagerReader userReader;
 
     Scanner scanner = new Scanner(System.in);
     User currentUser = null;
@@ -19,43 +31,54 @@ public class SwiftBidApp {
     // EFFECTS: Runs the SwiftBid Application
     @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     public SwiftBidApp() {
-        Scanner scanner = new Scanner(System.in);
+        auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
+        auctionReader = new AuctionManagerReader(AUCTION_JSON);
+        userWriter = new UserManagerJsonWriter(USER_JSON);
+        userReader = new UserManagerReader(USER_JSON);
         try {
-            while (true) {
-                printMenu();
-                String option = scanner.nextLine();
-                switch (option) {
-                    case "1":
-                        createLoginUser();
-                        continuation();
-                        break;
-                    case "2":
-                        browse();
-                        continuation();
-                        break;
-                    case "3":
-                        postListing();
-                        break;
-                    case "4":
-                        bid();
-                        continuation();
-                        break;
-                    case "5":
-                        removeListing();
-                        continuation();
-                        break;
-                    case "6":
-                        wishlists();
-                        continuation();
-                        break;
-                    case "X":
-                        exitApp();
-                    default:
-                        System.out.println("Invalid option. Please try again.");
-                }
+            auctionManager = auctionReader.read();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + AUCTION_JSON);
+        }
+        try {
+            manager = userReader.read();
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + USER_JSON);
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            printMenu();
+            String option = scanner.nextLine();
+            switch (option) {
+                case "1":
+                    createLoginUser();
+                    continuation();
+                    break;
+                case "2":
+                    browse();
+                    continuation();
+                    break;
+                case "3":
+                    postListing();
+                    break;
+                case "4":
+                    bid();
+                    continuation();
+                    break;
+                case "5":
+                    removeListing();
+                    continuation();
+                    break;
+                case "6":
+                    wishlists();
+                    continuation();
+                    break;
+                case "X":
+                    exitApp();
+                default:
+                    System.out.println("Invalid option. Please try again.");
             }
-        } catch (Exception ex) {
-            System.out.println("An Error occurred. Please try again");
         }
     }
 
@@ -67,7 +90,7 @@ public class SwiftBidApp {
         String userName = scanner.nextLine();
         System.out.print("Enter Password: ");
         String password = scanner.nextLine();
-        currentUser = new User(userName, password, auctionManager);
+        currentUser = new User(userName, password);
         if (currentUser.createAccount(userName, password, manager)) {
             System.out.println("User Created successfully.");
         } else {
@@ -105,7 +128,7 @@ public class SwiftBidApp {
         if (currentUser == null) {
             System.out.println("Please create/login as a user first.");
         } else {
-            List<Auction> auctions = auctionManager.getAuctions();  // Retrieve auctions from auctionManager
+            List<Auction> auctions = auctionManager.getAuctions();
             if (auctions.isEmpty()) {
                 System.out.println("No listings available.");
             } else {
@@ -127,7 +150,7 @@ public class SwiftBidApp {
             String wishlistName = scanner.nextLine();
             for (Auction auction : auctions) {
                 if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
-                    currentUser.addToWishList(auction,auctions);
+                    currentUser.addToWishList(auction, auctions);
                     System.out.println("Item added to Wishlist successfully!");
                 } else {
                     System.out.println("Auction not found");
@@ -173,7 +196,7 @@ public class SwiftBidApp {
             String auctionName = scanner.nextLine();
             System.out.print("Enter the description of your auction: ");
             String itemDesc = scanner.nextLine();
-            if (currentUser.createListing(auctionName, itemDesc)) {
+            if (currentUser.createListing(auctionName, itemDesc, auctionManager)) {
                 System.out.println("Listing Successfully created!");
             }
         }
@@ -205,6 +228,7 @@ public class SwiftBidApp {
 
     private void verifyBid(double bidAmount, Auction auction) {
         if (currentUser.placeBid(auction, bidAmount)) {
+            auction.updateWishlists(manager);
             System.out.println("Successfully Placed Bid!");
         } else {
             System.out.println("Failed to Place Bid. Your bid must be higher "
@@ -278,6 +302,24 @@ public class SwiftBidApp {
 
     // EFFECTS: Quits application
     private void exitApp() {
+        try {
+            auctionWriter.open();
+            auctionWriter.write(auctionManager);
+            auctionWriter.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + AUCTION_JSON);
+        }
+        System.out.println("Would you like to save your Account and Wishlist before exiting?(Y/N)");
+        String choice = scanner.nextLine();
+        if (choice.equalsIgnoreCase("Y")) {
+            try {
+                userWriter.open();
+                userWriter.write(manager);
+                userWriter.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("Unable to write to file: " + USER_JSON);
+            }
+        }
         System.out.println("Exiting Application...");
         scanner.close();
         System.exit(0);

@@ -1,22 +1,28 @@
 package model;
 
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.UserManagerReader;
+import persistence.Writable;
+//import persistence.Writable;
+
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
 // Represents a user of the application with a username, password and an AuctionManager object.
-public class User {
+public class User implements Writable {
     private String userName;
     private String passWord;
-    private AuctionManager listingManager;
     private ArrayList<Auction> wishList;
 
 
     // EFFECTS: Constructs a user with given username, password and initiates a listing manager
-    public User(String userName, String passWord, AuctionManager listingManager) {
+    public User(String userName, String passWord) {
         this.userName = userName;
         this.passWord = passWord;
-        this.listingManager = listingManager;
+//        this.listingManager = listingManager;
         this.wishList = new ArrayList<>();
 
     }
@@ -45,9 +51,10 @@ public class User {
 
     }
 
+
     // MODIFIES: this, AuctionManager
     // EFFECTS: Creates a new listing by a user and adds it to AuctionManager
-    public boolean createListing(String listingName, String description) {
+    public boolean createListing(String listingName, String description, AuctionManager listingManager) {
         Auction newAuction = new Auction(listingName, this, description);
         listingManager.addAuction(newAuction);
         return true;
@@ -57,6 +64,7 @@ public class User {
     // EFFECTS: places bid as requested by user on a specific listing.
     public boolean placeBid(Auction auction, double bid) {
         return auction.placeBid(this, bid);
+
     }
 
     public boolean addToWishList(Auction auction, List<Auction> auctions) {
@@ -86,9 +94,36 @@ public class User {
         return removed;
     }
 
+    public boolean updateWishlistAuction(Auction updatedAuction) {
+        for (Auction a : wishList) {
+            if (a.getListingName().equals(updatedAuction.getListingName())) {
+                a.setHighestBid(updatedAuction.getHighestBid());
+                a.setHighestBidder(updatedAuction.getHighestBidder());
+                return true;
+            }
+        }
+        return false;
+    }
 
+    public void setWishList(ArrayList a) {
+        wishList = a;
+    }
 
-    public ArrayList<Auction> getWishlist() {
+    public ArrayList getWishlist() {
         return wishList;
+    }
+
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("userName", userName);
+        json.put("passWord", passWord);
+        JSONArray wishlistArray = new JSONArray();
+        for (Auction a : wishList) {
+            wishlistArray.put(a.toJson());
+        }
+        json.put("wishList", wishlistArray);
+        return json;
     }
 }

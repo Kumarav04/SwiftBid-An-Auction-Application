@@ -1,11 +1,16 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+//import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 // Handles all User creation and management.
-public class UserManager {
+public class UserManager implements Writable {
     private List<User> allUsers;
 
     // EFFECTS: Constructs a new user manager as an ArrayList.
@@ -44,11 +49,33 @@ public class UserManager {
         return null;
     }
 
+    public List<User> getAllUsers() {
+        return allUsers;
+    }
+
     // REQUIRES: !user = null
     // MODIFIES: this
     // EFFECTS: Adds user to the list of all users contained in UserManager.
     public void addUser(User user) {
         allUsers.add(user);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("allUsers", usersToJson());
+        return json;
+    }
+
+    // EFFECTS: returns things in this workroom as a JSON array
+    private JSONArray usersToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (User t : allUsers) {
+            jsonArray.put(t.toJson());
+        }
+
+        return jsonArray;
     }
 
 
