@@ -1,0 +1,20 @@
+{"auctions": [
+    {
+        "highestBidderName": null,
+        "sellerPass": "pass123",
+        "highestBid": 0,
+        "sellerName": "John",
+        "description": "Fast car",
+        "listingName": "Car Auction",
+        "highestBidderPass": null
+    },
+    {
+        "highestBidderName": null,
+        "sellerPass": "pass123",
+        "highestBid": 0,
+        "sellerName": "John",
+        "description": "Mountain bike",
+        "listingName": "Bike Auction",
+        "highestBidderPass": null
+    }
+]}

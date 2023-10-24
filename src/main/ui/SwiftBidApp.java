@@ -11,6 +11,7 @@ import persistence.UserManagerReader;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -148,13 +149,21 @@ public class SwiftBidApp {
         if (wishlist.equalsIgnoreCase("wishlist")) {
             System.out.println("Enter the name of the auction you would like to add to your wish list");
             String wishlistName = scanner.nextLine();
+            boolean auctionFound = false;
             for (Auction auction : auctions) {
                 if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
-                    currentUser.addToWishList(auction, auctions);
-                    System.out.println("Item added to Wishlist successfully!");
-                } else {
-                    System.out.println("Auction not found");
+                    if (currentUser.addToWishList(auction, auctions)) {
+                        System.out.println("Item added to Wishlist successfully!");
+                    } else {
+                        System.out.println("Item already exists in wishlist");
+                    }
+                    auctionFound = true;
+                    break;
+
                 }
+            }
+            if (!auctionFound) {
+                System.out.println("Auction not found");
             }
         }
     }
@@ -173,15 +182,25 @@ public class SwiftBidApp {
             if (delete.equalsIgnoreCase("D")) {
                 System.out.println("Enter the name of the auction you would like to delete from your wish list");
                 String wishlistName = scanner.nextLine();
-                for (Auction auction : wishlist) {
-                    if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
-                        currentUser.removeFromWishList(auction);
-                        System.out.println("Item removed from Wishlist successfully!");
-                    } else {
-                        System.out.println("Auction not found");
-                    }
-                }
+                List<Auction> itemsToRemove = new ArrayList<>();
+                wishlistsHelper(wishlist, wishlistName, itemsToRemove);
             }
+        }
+    }
+
+    private void wishlistsHelper(List<Auction> wishlist, String wishlistName, List<Auction> itemsToRemove) {
+        for (Auction auction : wishlist) {
+            if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
+                itemsToRemove.add(auction);
+            }
+        }
+        if (!itemsToRemove.isEmpty()) {
+            for (Auction auction : itemsToRemove) {
+                currentUser.removeFromWishList(auction);
+                System.out.println("Item removed from Wishlist successfully!");
+            }
+        } else {
+            System.out.println("Auction not found");
         }
     }
 

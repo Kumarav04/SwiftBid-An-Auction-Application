@@ -2,6 +2,9 @@ package model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserManagerTest {
@@ -12,8 +15,8 @@ public class UserManagerTest {
     @BeforeEach
     void runBefore() {
         userManager = new UserManager();
-        testUser1 = new User("username1", "password1", null);
-        testUser2 = new User("username2", "password2", null);
+        testUser1 = new User("username1", "password1");
+        testUser2 = new User("username2", "password2");
         userManager.addUser(testUser1);
     }
 
@@ -41,5 +44,12 @@ public class UserManagerTest {
         userManager.addUser(testUser2);
         assertTrue(userManager.isUsernameTaken("username2"));
         assertEquals(testUser2, userManager.getUser("username2"));
+    }
+
+    @Test
+    void testGetAllUsers() {
+        ArrayList temp = new ArrayList();
+        temp.add(testUser1);
+        assertEquals(userManager.getAllUsers(),temp);
     }
 }

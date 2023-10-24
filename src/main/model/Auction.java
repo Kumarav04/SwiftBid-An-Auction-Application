@@ -1,6 +1,7 @@
 package model;
 
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import persistence.UserManagerReader;
 import persistence.Writable;
@@ -34,6 +35,10 @@ public class Auction implements Writable {
     // EFFECTS: returns the seller's username
     public String getSeller() {
         return seller.getUserName();
+    }
+
+    public User getSellerObject() {
+        return seller;
     }
 
     // EFFECTS: returns the highest bid on an auction
@@ -101,9 +106,15 @@ public class Auction implements Writable {
         String sellerName = jsonObject.getString("sellerName");
         String sellerPass = jsonObject.getString("sellerPass");
         User seller = new User(sellerName, sellerPass);
+        String bidderName = null;
+        String bidderPass = null;
+        try {
+            bidderName = jsonObject.getString("highestBidderName");
+            bidderPass = jsonObject.getString("highestBidderPass");
+        } catch (JSONException e) {
+            ;
+        }
         double highestBid = jsonObject.getDouble("highestBid");
-        String bidderName = jsonObject.getString("highestBidderName");
-        String bidderPass = jsonObject.getString("highestBidderPass");
         User highestBidder = new User(bidderName, bidderPass);
         String description = jsonObject.getString("description");
         Auction auction = new Auction(listingName, seller, description);

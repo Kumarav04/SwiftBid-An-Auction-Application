@@ -3,11 +3,8 @@ package model;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import persistence.UserManagerReader;
 import persistence.Writable;
-//import persistence.Writable;
 
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +19,6 @@ public class User implements Writable {
     public User(String userName, String passWord) {
         this.userName = userName;
         this.passWord = passWord;
-//        this.listingManager = listingManager;
         this.wishList = new ArrayList<>();
 
     }
@@ -71,26 +67,30 @@ public class User implements Writable {
         boolean wishlisted = false;
         for (Auction a : auctions) {
             if (a.equals(auction)) {
-                wishList.add(auction);
-                wishlisted = true;
-
-            } else {
-                wishlisted = false;
+                if (!wishList.contains(auction)) {
+                    wishList.add(auction);
+                    wishlisted = true;
+                }
             }
         }
         return wishlisted;
     }
 
     public boolean removeFromWishList(Auction auction) {
-        boolean removed = false;
+        List<Auction> itemsToRemove = new ArrayList<>();
+
         for (Auction a : wishList) {
             if (a.equals(auction)) {
-                removed = false;
-            } else {
-                wishList.remove(auction);
-                removed = true;
+                itemsToRemove.add(auction);
             }
         }
+
+        boolean removed = !itemsToRemove.isEmpty();
+
+        if (removed) {
+            wishList.removeAll(itemsToRemove);
+        }
+
         return removed;
     }
 
@@ -125,5 +125,20 @@ public class User implements Writable {
         }
         json.put("wishList", wishlistArray);
         return json;
+    }
+
+    public User fromUserJson(JSONObject jsonObject) {
+        String userName = jsonObject.getString("userName");
+        String passWord = jsonObject.getString("passWord");
+        User user = new User(userName, passWord);
+        JSONArray wishlistArray = jsonObject.getJSONArray("wishList");
+        ArrayList<Auction> wishList = new ArrayList<>();
+        for (int i = 0; i < wishlistArray.length(); i++) {
+            JSONObject auctionJson = wishlistArray.getJSONObject(i);
+            Auction auction = Auction.fromJson(auctionJson);
+            wishList.add(auction);
+        }
+        user.setWishList(wishList);
+        return user;
     }
 }
