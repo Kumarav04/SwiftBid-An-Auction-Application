@@ -82,7 +82,7 @@ public class AuctionManagerJsonWriterTest extends JsonTest {
             assertEquals("Mountain bike", bikeAuction.getDescription());
 
         } catch (IOException e) {
-            fail("Exception should not have been thrown");
+            fail("Exception should be thrown");
         }
     }
 }
