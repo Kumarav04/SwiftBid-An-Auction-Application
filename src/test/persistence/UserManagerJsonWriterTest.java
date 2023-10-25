@@ -1,7 +1,10 @@
 package persistence;
 
+import model.Auction;
+import model.AuctionManager;
 import model.User;
 import model.UserManager;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserManagerJsonWriterTest {
     private UserManager userManager;
     private UserManagerJsonWriter userManagerJsonWriter;
+    private UserManagerReader userManagerReader;
 
     @BeforeEach
     void runBefore() {
@@ -22,6 +26,7 @@ public class UserManagerJsonWriterTest {
         userManager.addUser(testUser1);
         userManager.addUser(testUser2);
         userManagerJsonWriter = new UserManagerJsonWriter("./data/testWriterUserManager.json");
+        userManagerReader = new UserManagerReader("./data/testWriterUserManager.json");
     }
 
     @Test
@@ -50,5 +55,23 @@ public class UserManagerJsonWriterTest {
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         }
+    }
+
+    @Test
+    void testAddUserWithWishlist() {
+        UserManager um = new UserManager();
+        User testUser = new User("testName", "testPass");
+        Auction testAuction = new Auction("testAuction", testUser, "");
+        AuctionManager testAuctionManager = new AuctionManager();
+        testAuctionManager.addAuction(testAuction);
+        testUser.addToWishList(testAuction, testAuctionManager.getAuctions());
+        JSONObject jsonObject = testUser.toJson();
+        userManagerReader.addUser(um, jsonObject);
+
+        assertEquals(1, um.getAllUsers().size());
+        User user = um.getAllUsers().get(0);
+        assertEquals("testName", user.getUserName());
+        assertEquals("testPass", user.getPassWord());
+        assertEquals(1, user.getWishlist().size());
     }
 }

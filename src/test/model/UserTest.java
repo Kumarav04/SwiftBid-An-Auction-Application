@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -144,6 +145,26 @@ public class UserTest {
         assertEquals(sampleAuction2.getHighestBidder(), testUser);
 
         assertFalse(testUser.updateWishlistAuction(sampleAuction3));
+    }
+
+    @Test
+    void testUpdateWishlistAuctionMatchingNames() {
+        Auction updatedAuction = new Auction("MatchingName", testUser, "");
+        Auction a = new Auction("MatchingName", testUser2, "");
+        List<Auction> wishList = new ArrayList<>();
+        testUser2.addToWishList(a,testAuctionManager.getAuctions());
+
+        assertFalse(testUser2.updateWishlistAuction(updatedAuction));
+    }
+
+    // Covering the case where listing names do not match
+    @Test
+    void testUpdateWishlistAuctionNonMatchingNames() {
+        Auction updatedAuction = new Auction("UpdatedName", testUser, "");
+        Auction a = new Auction("OriginalName", testUser2, "");
+        testUser2.addToWishList(a,testAuctionManager.getAuctions());
+
+        assertFalse(testUser2.updateWishlistAuction(updatedAuction));
     }
 
     @Test

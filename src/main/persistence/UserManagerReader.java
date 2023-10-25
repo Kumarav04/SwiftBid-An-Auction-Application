@@ -66,7 +66,7 @@ public class UserManagerReader {
 
     // MODIFIES: um
     // EFFECTS: parses User from JSON object and adds it to UserManager
-    private void addUser(UserManager um, JSONObject jsonObject) {
+    protected void addUser(UserManager um, JSONObject jsonObject) {
         String userName = jsonObject.getString("userName");
         String passWord = jsonObject.getString("passWord");
         User user = new User(userName, passWord);
