@@ -245,6 +245,8 @@ public class SwiftBidApp {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: verifies if bid is valid- if new bid is greater than current bid
     private void verifyBid(double bidAmount, Auction auction) {
         if (currentUser.placeBid(auction, bidAmount)) {
             auction.updateWishlists(manager);
@@ -319,7 +321,7 @@ public class SwiftBidApp {
     }
 
 
-    // EFFECTS: Quits application
+    // EFFECTS: Quits application, gives user the choice to save user details
     private void exitApp() {
         try {
             auctionWriter.open();

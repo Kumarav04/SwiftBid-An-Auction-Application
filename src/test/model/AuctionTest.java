@@ -6,22 +6,20 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class AuctionTest {
     private Auction testAuction;
-    private Auction testAuction2;
     private User testUser;
     private User testUser2;
-    private AuctionManager testAuctionManager;
     private UserManager testUserManager;
 
     @BeforeEach
     void runBefore() {
-        testAuctionManager = new AuctionManager();
+        AuctionManager testAuctionManager = new AuctionManager();
         testUserManager = new UserManager();
         testUser = new User("newUser", "newPassword");
         testUser2 = new User("newUser2", "newPassword2");
         testUserManager.addUser(testUser);
         testUserManager.addUser(testUser2);
         testAuction = new Auction("newListing", testUser, "newDesc");
-        testAuction2 = new Auction("newListing2", testUser2, "newDesc2");
+        Auction testAuction2 = new Auction("newListing2", testUser2, "newDesc2");
         testAuctionManager.addAuction(testAuction);
         testAuctionManager.addAuction(testAuction2);
         testUser2.addToWishList(testAuction, testAuctionManager.getAuctions());
@@ -83,13 +81,13 @@ public class AuctionTest {
 
     @Test
     void testAuctionToJson() {
-        assertEquals(testAuction.fromJson(testAuction.toJson()).getSeller(), testAuction.getSeller());
-        assertEquals(testAuction.fromJson(testAuction.toJson()).getListingName(), testAuction.getListingName());
-        assertEquals(testAuction.fromJson(testAuction.toJson()).getDescription(), testAuction.getDescription());
-        assertEquals(testAuction.fromJson(testAuction.toJson()).getHighestBid(), testAuction.getHighestBid());
-        assertEquals(testAuction.fromJson(testAuction.toJson()).getHighestBidder().getUserName(), null);
+        assertEquals(Auction.fromJson(testAuction.toJson()).getSeller(), testAuction.getSeller());
+        assertEquals(Auction.fromJson(testAuction.toJson()).getListingName(), testAuction.getListingName());
+        assertEquals(Auction.fromJson(testAuction.toJson()).getDescription(), testAuction.getDescription());
+        assertEquals(Auction.fromJson(testAuction.toJson()).getHighestBid(), testAuction.getHighestBid());
+        assertNull(Auction.fromJson(testAuction.toJson()).getHighestBidder().getUserName());
         testAuction.placeBid(testUser2, 400);
-        assertEquals(testAuction.fromJson(testAuction.toJson()).getHighestBidder().getUserName(),
+        assertEquals(Auction.fromJson(testAuction.toJson()).getHighestBidder().getUserName(),
                 testAuction.getHighestBidder().getUserName());
     }
 

@@ -3,19 +3,15 @@ package model;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import persistence.UserManagerReader;
 import persistence.Writable;
-
-import java.io.IOException;
-//import persistence.Writable;
 
 // Represents an Auction with a listing name, seller name, highest bid and highest bidder.
 public class Auction implements Writable {
-    private String listingName;
-    private User seller;
+    private final String listingName;
+    private final User seller;
     private double highestBid;
     private User highestBidder;
-    private String description;
+    private final String description;
 
 
     // EFFECTS: Constructs an Auction with given listing name, and user
@@ -51,10 +47,13 @@ public class Auction implements Writable {
         return highestBidder;
     }
 
+    // EFFECTS: returns the description of the auction
     public String getDescription() {
         return description;
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets the highest bidder to given user
     public void setHighestBidder(User bidder) {
         this.highestBidder = bidder;
     }
@@ -77,12 +76,16 @@ public class Auction implements Writable {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: Updates the auction to every wishlist that has it
     public void updateWishlists(UserManager um) {
         for (User user: um.getAllUsers()) {
             user.updateWishlistAuction(this);
         }
     }
 
+
+    // EFFECTS: Converts given Auction object to JSON format
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -101,6 +104,7 @@ public class Auction implements Writable {
         return json;
     }
 
+    // EFFECTS: Retrieves Auction object from JSON format
     public static Auction fromJson(JSONObject jsonObject) {
         String listingName = jsonObject.getString("listingName");
         String sellerName = jsonObject.getString("sellerName");
@@ -111,7 +115,7 @@ public class Auction implements Writable {
         try {
             bidderName = jsonObject.getString("highestBidderName");
             bidderPass = jsonObject.getString("highestBidderPass");
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
             ;
         }
         double highestBid = jsonObject.getDouble("highestBid");

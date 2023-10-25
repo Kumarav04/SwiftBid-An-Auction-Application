@@ -14,16 +14,18 @@ import java.util.stream.Stream;
 
 import org.json.*;
 
-
+// Represents a reader that reads AuctionManager from JSON data stored in file
 public class AuctionManagerReader {
-    private String source;
+    private final String source;
 
-
+    // EFFECTS: constructs reader to read from source file
     public AuctionManagerReader(String source) {
         this.source = source;
     }
 
 
+    // EFFECTS: reads workroom from file and returns it;
+    // throws IOException if an error occurs reading data from file
     public AuctionManager read() throws IOException {
         try {
             String jsonData = readFile(source);
@@ -35,6 +37,7 @@ public class AuctionManagerReader {
     }
 
 
+    // EFFECTS: reads source file as string and returns it
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 
@@ -46,6 +49,7 @@ public class AuctionManagerReader {
     }
 
 
+    // EFFECTS: parses AuctionManager from JSON object and returns it
     private AuctionManager parseAuctionManager(JSONObject jsonObject) {
         AuctionManager am = new AuctionManager();
         addAuctions(am, jsonObject);
@@ -53,6 +57,8 @@ public class AuctionManagerReader {
     }
 
 
+    // MODIFIES: am
+    // EFFECTS: parses Auctions from JSON object and adds them to AuctionManager
     private void addAuctions(AuctionManager am, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("auctions");
         for (Object json : jsonArray) {
@@ -61,7 +67,8 @@ public class AuctionManagerReader {
         }
     }
 
-
+    // MODIFIES: am
+    // EFFECTS: parses Auction from JSON object and adds it to AuctionManager
     private void addAuction(AuctionManager am, JSONObject jsonObject) {
         String listingName = jsonObject.getString("listingName");
         String sellerName = jsonObject.getString("sellerName");
@@ -74,7 +81,7 @@ public class AuctionManagerReader {
         try {
             bidderName = jsonObject.getString("highestBidderName");
             bidderPass = jsonObject.getString("highestBidderPass");
-        } catch (JSONException e) {
+        } catch (JSONException ignored) {
             ;
         }
 

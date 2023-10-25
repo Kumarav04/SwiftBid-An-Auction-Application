@@ -63,6 +63,8 @@ public class User implements Writable {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds auction to wishlist
     public boolean addToWishList(Auction auction, List<Auction> auctions) {
         boolean wishlisted = false;
         for (Auction a : auctions) {
@@ -76,6 +78,8 @@ public class User implements Writable {
         return wishlisted;
     }
 
+    // MODIFIES: this
+    // EFFECTS: removes auction from wishlist
     public boolean removeFromWishList(Auction auction) {
         List<Auction> itemsToRemove = new ArrayList<>();
 
@@ -94,6 +98,8 @@ public class User implements Writable {
         return removed;
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates Auction with new details in the wishlist
     public boolean updateWishlistAuction(Auction updatedAuction) {
         for (Auction a : wishList) {
             if (a.getListingName().equals(updatedAuction.getListingName())) {
@@ -114,6 +120,7 @@ public class User implements Writable {
     }
 
 
+    // EFFECTS: converts User object to JSON format
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -127,6 +134,7 @@ public class User implements Writable {
         return json;
     }
 
+    // EFFECTS: Retrieves User object from JSON format
     public User fromUserJson(JSONObject jsonObject) {
         String userName = jsonObject.getString("userName");
         String passWord = jsonObject.getString("passWord");

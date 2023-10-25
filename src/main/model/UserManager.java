@@ -11,7 +11,7 @@ import java.util.List;
 
 // Handles all User creation and management.
 public class UserManager implements Writable {
-    private List<User> allUsers;
+    private final List<User> allUsers;
 
     // EFFECTS: Constructs a new user manager as an ArrayList.
     public UserManager() {
@@ -60,6 +60,7 @@ public class UserManager implements Writable {
         allUsers.add(user);
     }
 
+    // EFFECTS: converts UserManager Object to JSON format
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -67,7 +68,7 @@ public class UserManager implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns List<User> as a JSON array
     private JSONArray usersToJson() {
         JSONArray jsonArray = new JSONArray();
 

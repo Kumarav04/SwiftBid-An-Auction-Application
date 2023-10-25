@@ -1,0 +1,14 @@
+{
+  "allUsers": [
+    {
+      "userName": "user1",
+      "passWord": "password1",
+      "wishList": []
+    },
+    {
+      "userName": "user2",
+      "passWord": "password2",
+      "wishList": []
+    }
+  ]
+}

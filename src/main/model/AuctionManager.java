@@ -11,7 +11,7 @@ import java.util.List;
 
 // Handles a list of all Auctions currently listed in the platform
 public class AuctionManager implements Writable {
-    private List<Auction> auctions;
+    private final List<Auction> auctions;
 
     //EFFECTS: Constructs a new auction manager as an ArrayList.
     public AuctionManager() {
@@ -36,10 +36,8 @@ public class AuctionManager implements Writable {
         return auctions;
     }
 
-    public AuctionManager getAuctionManager() {
-        return this;
-    }
 
+    // EFFECTS: converts AuctionManager object to JSON format
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -47,7 +45,7 @@ public class AuctionManager implements Writable {
         return json;
     }
 
-    // EFFECTS: returns things in this workroom as a JSON array
+    // EFFECTS: returns List<Auction> as a JSON array
     private JSONArray auctionsToJson() {
         JSONArray jsonArray = new JSONArray();
 

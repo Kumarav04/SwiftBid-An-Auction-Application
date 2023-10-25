@@ -14,15 +14,17 @@ import java.util.stream.Stream;
 
 import org.json.*;
 
+// Represents a reader that reads UserManager from JSON data stored in file
 public class UserManagerReader {
-    private String source;
+    private final String source;
 
-
+    // EFFECTS: constructs reader to read from source file
     public UserManagerReader(String source) {
         this.source = source;
     }
 
-
+    // EFFECTS: reads workroom from file and returns it;
+    // throws IOException if an error occurs reading data from file
     public UserManager read() throws IOException {
         try {
             String jsonData = readFile(source);
@@ -33,7 +35,7 @@ public class UserManagerReader {
         }
     }
 
-
+    // EFFECTS: reads source file as string and returns it
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 
@@ -44,7 +46,7 @@ public class UserManagerReader {
         return contentBuilder.toString();
     }
 
-
+    // EFFECTS: parses UserManager from JSON object and returns it
     private UserManager parseUserManager(JSONObject jsonObject) {
         UserManager um = new UserManager();
         addUsers(um, jsonObject);
@@ -52,6 +54,8 @@ public class UserManagerReader {
     }
 
 
+    // MODIFIES: um
+    // EFFECTS: parses Users from JSON object and adds them to UserManager
     private void addUsers(UserManager um, JSONObject jsonObject) {
         JSONArray jsonArray = jsonObject.getJSONArray("allUsers");
         for (Object json : jsonArray) {
@@ -60,7 +64,8 @@ public class UserManagerReader {
         }
     }
 
-
+    // MODIFIES: um
+    // EFFECTS: parses User from JSON object and adds it to UserManager
     private void addUser(UserManager um, JSONObject jsonObject) {
         String userName = jsonObject.getString("userName");
         String passWord = jsonObject.getString("passWord");

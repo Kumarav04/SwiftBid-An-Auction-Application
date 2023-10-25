@@ -118,6 +118,7 @@ public class UserTest {
     public void testUpdateWishlistAuction() {
         // Add the original auction to the user's wish list
         testUser.addToWishList(sampleAuction1, new ArrayList<>());
+        testUser.addToWishList(sampleAuction3, new ArrayList<>());
 
         // Test updating an auction in the wish list with the latest highest bid and bidder
 
@@ -132,7 +133,7 @@ public class UserTest {
 
         // Ensure that the original auction in the wish list remains unchanged
         assertEquals(0, sampleAuction1.getHighestBid());
-        assertEquals(null, sampleAuction1.getHighestBidder());
+        assertNull(sampleAuction1.getHighestBidder());
 
         // Test updating an auction with different values (bidder and bid)
         sampleAuction2.placeBid(testUser, 300.0);
@@ -141,6 +142,8 @@ public class UserTest {
         // Check if the auction in the wish list has been updated with different values
         assertEquals(sampleAuction2.getHighestBid(), 300.0);
         assertEquals(sampleAuction2.getHighestBidder(), testUser);
+
+        assertFalse(testUser.updateWishlistAuction(sampleAuction3));
     }
 
     @Test
