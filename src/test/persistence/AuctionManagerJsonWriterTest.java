@@ -3,17 +3,13 @@ package persistence;
 import model.Auction;
 import model.AuctionManager;
 import model.User;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AuctionManagerJsonWriterTest {
     @Test
@@ -53,7 +49,6 @@ public class AuctionManagerJsonWriterTest {
         try {
             AuctionManager am = new AuctionManager();
             User seller = new User("John", "pass123");
-            User bidder = new User("Jane", "pass456");
             am.addAuction(new Auction("Car Auction", seller,  "Fast car"));
             am.addAuction(new Auction("Bike Auction", seller,  "Mountain bike"));
 
@@ -71,14 +66,14 @@ public class AuctionManagerJsonWriterTest {
             assertEquals("Car Auction", carAuction.getListingName());
             assertEquals("John", carAuction.getSeller());
             assertEquals(0, carAuction.getHighestBid());
-            assertEquals(null, carAuction.getHighestBidder().getUserName());
+            assertNull(carAuction.getHighestBidder().getUserName());
             assertEquals("Fast car", carAuction.getDescription());
 
             Auction bikeAuction = auctions.get(1);
             assertEquals("Bike Auction", bikeAuction.getListingName());
             assertEquals("John", bikeAuction.getSeller());
             assertEquals(0, bikeAuction.getHighestBid());
-            assertEquals(null, bikeAuction.getHighestBidder().getUserName());
+            assertNull(bikeAuction.getHighestBidder().getUserName());
             assertEquals("Mountain bike", bikeAuction.getDescription());
 
         } catch (IOException e) {

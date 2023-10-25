@@ -70,11 +70,9 @@ public class AuctionTest {
 
     @Test
     void testUpdateWishlists() {
-        // Call updateWishlists on user1
         testAuction.placeBid(testUser2, 400);
         testAuction.updateWishlists(testUserManager);
 
-        // Check if user1's wishlist has been updated
         assertFalse(testUser.updateWishlistAuction(testAuction));
         assertTrue(testUser2.updateWishlistAuction(testAuction));
     }

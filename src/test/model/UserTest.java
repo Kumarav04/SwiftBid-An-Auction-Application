@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,17 +82,13 @@ public class UserTest {
 
     @Test
     public void testAddToWishList() {
-        // Test adding an auction to the wish list
         assertTrue(testUser.addToWishList(sampleAuction1, testAuctionManager.getAuctions()));
         assertTrue(testUser.addToWishList(sampleAuction2, testAuctionManager.getAuctions()));
 
-        // Test adding the same auction twice to the wish list
         assertFalse(testUser.addToWishList(sampleAuction1, testAuctionManager.getAuctions()));
 
-        // Test adding an auction that doesn't exist in the auctions list
         assertFalse(testUser.addToWishList(sampleAuction3, testAuctionManager.getAuctions()));
 
-        // Test adding an auction to an empty wish list
 
     }
 
@@ -102,13 +97,10 @@ public class UserTest {
         testUser.addToWishList(sampleAuction1,testAuctionManager.getAuctions());
         testUser.addToWishList(sampleAuction2,testAuctionManager.getAuctions());
 
-        // Test removing an auction from an empty wish list
         assertTrue(testUser.removeFromWishList(sampleAuction1));
 
-        // Test removing an auction from the wish list
         assertTrue(testUser.removeFromWishList(sampleAuction2));
 
-        // Test removing an auction that is not in the wish list
         assertFalse(testUser.removeFromWishList(sampleAuction3));
 
 
@@ -117,30 +109,23 @@ public class UserTest {
 
     @Test
     public void testUpdateWishlistAuction() {
-        // Add the original auction to the user's wish list
+
         testUser.addToWishList(sampleAuction1, new ArrayList<>());
         testUser.addToWishList(sampleAuction3, new ArrayList<>());
 
-        // Test updating an auction in the wish list with the latest highest bid and bidder
-
-        // Check if the auction in the wish list has been updated
         assertEquals(sampleAuction2.getHighestBid(), sampleAuction1.getHighestBid());
         assertEquals(sampleAuction2.getHighestBidder(), sampleAuction1.getHighestBidder());
 
-        // Test updating an auction that is not in the wish list
         Auction newAuction = new Auction("NewAuction", testUser, "NewDescription");
         newAuction.placeBid(testUser, 200.0);
         assertFalse(testUser.updateWishlistAuction(newAuction));
 
-        // Ensure that the original auction in the wish list remains unchanged
         assertEquals(0, sampleAuction1.getHighestBid());
         assertNull(sampleAuction1.getHighestBidder());
 
-        // Test updating an auction with different values (bidder and bid)
         sampleAuction2.placeBid(testUser, 300.0);
         assertFalse(testUser.updateWishlistAuction(sampleAuction2));
 
-        // Check if the auction in the wish list has been updated with different values
         assertEquals(sampleAuction2.getHighestBid(), 300.0);
         assertEquals(sampleAuction2.getHighestBidder(), testUser);
 
