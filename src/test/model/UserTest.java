@@ -151,10 +151,11 @@ public class UserTest {
     void testUpdateWishlistAuctionMatchingNames() {
         Auction updatedAuction = new Auction("MatchingName", testUser, "");
         Auction a = new Auction("MatchingName", testUser2, "");
-        List<Auction> wishList = new ArrayList<>();
+        testAuctionManager.addAuction(updatedAuction);
+        testAuctionManager.addAuction(a);
         testUser2.addToWishList(a,testAuctionManager.getAuctions());
 
-        assertFalse(testUser2.updateWishlistAuction(updatedAuction));
+        assertTrue(testUser2.updateWishlistAuction(updatedAuction));
     }
 
     // Covering the case where listing names do not match
@@ -162,6 +163,8 @@ public class UserTest {
     void testUpdateWishlistAuctionNonMatchingNames() {
         Auction updatedAuction = new Auction("UpdatedName", testUser, "");
         Auction a = new Auction("OriginalName", testUser2, "");
+        testAuctionManager.addAuction(updatedAuction);
+        testAuctionManager.addAuction(a);
         testUser2.addToWishList(a,testAuctionManager.getAuctions());
 
         assertFalse(testUser2.updateWishlistAuction(updatedAuction));
