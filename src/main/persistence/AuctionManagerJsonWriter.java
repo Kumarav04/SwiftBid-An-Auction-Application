@@ -6,6 +6,9 @@ import org.json.JSONObject;
 
 import java.io.*;
 
+// Implemented persistence by referring to JSONSerializationDemo
+// (https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo)
+
 // Represents a writer that writes JSON representation of AuctionManager to file
 public class AuctionManagerJsonWriter {
     private static final int TAB = 4;
