@@ -2,11 +2,8 @@ package ui;
 
 import model.AuctionManager;
 import model.User;
-import model.UserManager;
 import persistence.AuctionManagerJsonWriter;
 import persistence.AuctionManagerReader;
-import persistence.UserManagerJsonWriter;
-import persistence.UserManagerReader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,37 +11,22 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class NewAuctionFrame extends JFrame {
-    private LoginFrame loginFrame;
     private User currentUser;
     private AuctionManager auctionManager;
     private JTextField auctionName;
     private JTextField auctionDescription;
     private static final String AUCTION_JSON = "./data/auctionmanager.json";
-    private static final String USER_JSON = "./data/usermanager.json";
-    private UserManager manager;
     private AuctionManagerJsonWriter auctionWriter;
-    private AuctionManagerReader auctionReader;
-    private UserManagerJsonWriter userWriter;
-    private UserManagerReader userReader;
 
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     public NewAuctionFrame(LoginFrame loginFrame) {
         auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
-        auctionReader = new AuctionManagerReader(AUCTION_JSON);
-        userWriter = new UserManagerJsonWriter(USER_JSON);
-        userReader = new UserManagerReader(USER_JSON);
+        AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
         try {
             auctionManager = auctionReader.read();
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + AUCTION_JSON);
         }
-        try {
-            manager = userReader.read();
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + USER_JSON);
-        }
 
-        this.loginFrame = loginFrame;
         currentUser = loginFrame.getCurrentUser();
 
         JLabel label = new JLabel("Post New Auction");
@@ -91,8 +73,8 @@ public class NewAuctionFrame extends JFrame {
     }
 
     private void postListing() {
-        String nameofAuction = new String(auctionName.getText());
-        String itemDesc = new String(auctionDescription.getText());
+        String nameofAuction = auctionName.getText();
+        String itemDesc = auctionDescription.getText();
         if (currentUser.createListing(nameofAuction, itemDesc, auctionManager)) {
             JOptionPane.showMessageDialog(this, "Auction Posted Successfully!");
         }
@@ -106,8 +88,6 @@ public class NewAuctionFrame extends JFrame {
         }
 
     }
-
-
 
 
 }

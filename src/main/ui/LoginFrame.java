@@ -52,6 +52,7 @@ public class LoginFrame extends JFrame {
         loginPage();
 
 
+
     }
 
     private void loginPage() {
@@ -130,17 +131,18 @@ public class LoginFrame extends JFrame {
     }
 
     private void createLoginUser() {
-        String userName = new String(userText.getText());
-        String password = new String(passwordText.getText());
+        String userName = userText.getText().strip();
+        String password = passwordText.getText().strip();
         currentUser = new User(userName, password);
         if (currentUser.createAccount(userName, password, manager)) {
             JOptionPane.showMessageDialog(this, "User created successfully.");
             new MainMenuFrame(this);
+            this.setVisible(false);
         } else {
             if (manager.authenticate(userName, password)) {
                 currentUser = manager.getUser(userName);
-                JOptionPane.showMessageDialog(this, "User logged in successfully.");
                 new MainMenuFrame(this);
+                this.setVisible(false);
             } else {
                 failedAuthenticationHandling();
             }
@@ -172,11 +174,11 @@ public class LoginFrame extends JFrame {
         return currentUser;
     }
 
-    public AuctionManager getAuctionManager() {
-        return auctionManager;
+    public UserManager getManager() {
+        return manager;
     }
 
     public static void main(String[] args) {
-        LoginFrame loginframe = new LoginFrame();
+        new LoginFrame();
     }
 }

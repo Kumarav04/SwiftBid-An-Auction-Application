@@ -3,16 +3,11 @@ package ui;
 import model.Auction;
 import model.AuctionManager;
 import model.User;
-import model.UserManager;
-import persistence.AuctionManagerJsonWriter;
 import persistence.AuctionManagerReader;
-import persistence.UserManagerJsonWriter;
-import persistence.UserManagerReader;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BrowseFrame extends JFrame {
@@ -21,36 +16,19 @@ public class BrowseFrame extends JFrame {
     private static final String AUCTION_JSON = "./data/auctionmanager.json";
     private static final String USER_JSON = "./data/usermanager.json";
     private AuctionManager auctionManager;
-    private UserManager manager;
-    private AuctionManagerJsonWriter auctionWriter;
     private AuctionManagerReader auctionReader;
-    private UserManagerJsonWriter userWriter;
-    private UserManagerReader userReader;
     private JTextArea auctionTextArea;
 
     @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     public BrowseFrame(LoginFrame loginFrame) {
-
         currentUser = loginFrame.getCurrentUser();
-        auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
         auctionReader = new AuctionManagerReader(AUCTION_JSON);
-        userWriter = new UserManagerJsonWriter(USER_JSON);
-        userReader = new UserManagerReader(USER_JSON);
         try {
             auctionManager = auctionReader.read();
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + AUCTION_JSON);
         }
-        try {
-            manager = userReader.read();
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + USER_JSON);
-        }
 
-
-//        JScrollBar s = new JScrollBar();
-//        s.setBounds(365,0, 20,560);
-//        add(s);
 
         auctionTextArea = new JTextArea();
         browse();
@@ -114,26 +92,28 @@ public class BrowseFrame extends JFrame {
         String wishlistName = JOptionPane.showInputDialog(this, "Enter the name of the "
                 + " auction you would like to add to your wish list");
 
-        if (wishlistName != null && !wishlistName.trim().isEmpty()) {
-            boolean auctionFound = false;
+        if (wishlistName != null) {
+            if (wishlistName != null && !wishlistName.trim().isEmpty()) {
+                boolean auctionFound = false;
 
-            for (Auction auction : auctions) {
-                if (auction.getListingName().equalsIgnoreCase(wishlistName.trim())) {
-                    if (currentUser.addToWishList(auction, auctions)) {
-                        JOptionPane.showMessageDialog(this, "Item added to Wishlist successfully!");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Item already exists in wishlist");
+                for (Auction auction : auctions) {
+                    if (auction.getListingName().equalsIgnoreCase(wishlistName.trim())) {
+                        if (currentUser.addToWishList(auction, auctions)) {
+                            JOptionPane.showMessageDialog(this, "Item added to Wishlist successfully!");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Item already exists in wishlist");
+                        }
+                        auctionFound = true;
+                        break;
                     }
-                    auctionFound = true;
-                    break;
                 }
-            }
 
-            if (!auctionFound) {
-                JOptionPane.showMessageDialog(this, "Auction not found");
+                if (!auctionFound) {
+                    JOptionPane.showMessageDialog(this, "Auction not found");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Invalid input. Auction name cannot be empty.");
             }
-        } else {
-            JOptionPane.showMessageDialog(this, "Invalid input. Auction name cannot be empty.");
         }
 
     }
