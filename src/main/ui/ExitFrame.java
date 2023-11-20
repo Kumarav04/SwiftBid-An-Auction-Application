@@ -2,11 +2,9 @@ package ui;
 
 import model.UserManager;
 import persistence.UserManagerJsonWriter;
-import persistence.UserManagerReader;
 
 import javax.swing.*;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class ExitFrame extends JFrame {
 
@@ -21,7 +19,7 @@ public class ExitFrame extends JFrame {
 
         int option = JOptionPane.showOptionDialog(
                 this,
-                "Would you like to save the changes to your account before exiting?",
+                "Would you like to save your account and related changes before exiting?",
                 "Exiting Application",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,

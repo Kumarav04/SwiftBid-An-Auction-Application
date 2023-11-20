@@ -1,5 +1,6 @@
 package ui;
 
+import model.Auction;
 import model.AuctionManager;
 import model.User;
 import persistence.AuctionManagerJsonWriter;
@@ -49,7 +50,7 @@ public class NewAuctionFrame extends JFrame {
         JLabel passwordLabel = new JLabel("Description: ", JLabel.CENTER);
         auctionName = new JTextField(6);
         auctionDescription = new JTextField(6);
-        nameLabel.setBounds(50, 300, 80, 25);
+        nameLabel.setBounds(20, 300, 120, 25);
         passwordLabel.setBounds(55, 330, 80, 25);
         auctionName.setBounds(140, 300, 165, 25);
         auctionDescription.setBounds(140, 330, 165, 25);
@@ -61,7 +62,7 @@ public class NewAuctionFrame extends JFrame {
         //  create button
         JButton button = new JButton("Post Auction");
 
-        button.setBounds(140, 400, 100, 20);
+        button.setBounds(100, 400, 200, 20);
         button.addActionListener(e -> postListing());
 
         // adding button on frame
@@ -73,12 +74,29 @@ public class NewAuctionFrame extends JFrame {
     }
 
     private void postListing() {
+        boolean postStatus = true;
         String nameofAuction = auctionName.getText();
         String itemDesc = auctionDescription.getText();
-        if (currentUser.createListing(nameofAuction, itemDesc, auctionManager)) {
-            JOptionPane.showMessageDialog(this, "Auction Posted Successfully!");
+        for (Auction a : auctionManager.getAuctions()) {
+            if (a.getListingName().equalsIgnoreCase(nameofAuction)) {
+                JOptionPane.showMessageDialog(this, "An auction with the same name already exists."
+                        + "Please use a different name");
+                postStatus = false;
+                dispose();
+            }
+        }
+        if (postStatus) {
+            if (currentUser.createListing(nameofAuction, itemDesc, auctionManager)) {
+                JOptionPane.showMessageDialog(this, "Auction Posted Successfully!");
+                dispose();
+            }
         }
 
+        saveChanges();
+
+    }
+
+    private void saveChanges() {
         try {
             auctionWriter.open();
             auctionWriter.write(auctionManager);
@@ -86,7 +104,6 @@ public class NewAuctionFrame extends JFrame {
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + AUCTION_JSON);
         }
-
     }
 
 

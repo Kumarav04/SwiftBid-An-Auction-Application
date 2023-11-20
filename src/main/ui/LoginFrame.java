@@ -3,12 +3,8 @@ package ui;
 // Java program to create a
 // frame using inheritance().
 
-import model.AuctionManager;
 import model.User;
 import model.UserManager;
-import persistence.AuctionManagerJsonWriter;
-import persistence.AuctionManagerReader;
-import persistence.UserManagerJsonWriter;
 import persistence.UserManagerReader;
 
 import javax.imageio.ImageIO;
@@ -22,27 +18,13 @@ import java.io.IOException;
 public class LoginFrame extends JFrame {
     private JTextField userText;
     private JPasswordField passwordText;
-    private static final String AUCTION_JSON = "./data/auctionmanager.json";
     private static final String USER_JSON = "./data/usermanager.json";
-    private AuctionManager auctionManager;
     private UserManager manager;
-    private AuctionManagerJsonWriter auctionWriter;
-    private AuctionManagerReader auctionReader;
-    private UserManagerJsonWriter userWriter;
-    private UserManagerReader userReader;
     User currentUser = null;
 
 
     LoginFrame() {
-        auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
-        auctionReader = new AuctionManagerReader(AUCTION_JSON);
-        userWriter = new UserManagerJsonWriter(USER_JSON);
-        userReader = new UserManagerReader(USER_JSON);
-        try {
-            auctionManager = auctionReader.read();
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + AUCTION_JSON);
-        }
+        UserManagerReader userReader = new UserManagerReader(USER_JSON);
         try {
             manager = userReader.read();
         } catch (IOException e) {
@@ -80,7 +62,7 @@ public class LoginFrame extends JFrame {
     }
 
     private void imageDisplayer() {
-        ImageIcon icon = createImageIcon("./data/SwiftBid.jpg"); // Change the path to your image file
+        ImageIcon icon = createImageIcon(); // Change the path to your image file
         if (icon != null) {
             JLabel imageLabel = new JLabel(icon);
             imageLabel.setBounds(40, 10, 300, 197); // Adjust the position and size as needed
@@ -120,9 +102,9 @@ public class LoginFrame extends JFrame {
         add(passwordText);
     }
 
-    protected ImageIcon createImageIcon(String path) {
+    protected ImageIcon createImageIcon() {
         try {
-            BufferedImage image = ImageIO.read(new File(path));
+            BufferedImage image = ImageIO.read(new File("./data/SwiftBid.jpg"));
             return new ImageIcon(image);
         } catch (IOException e) {
             e.printStackTrace();
@@ -133,18 +115,22 @@ public class LoginFrame extends JFrame {
     private void createLoginUser() {
         String userName = userText.getText().strip();
         String password = passwordText.getText().strip();
-        currentUser = new User(userName, password);
-        if (currentUser.createAccount(userName, password, manager)) {
-            JOptionPane.showMessageDialog(this, "User created successfully.");
-            new MainMenuFrame(this);
-            this.setVisible(false);
+        if (userName.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Please enter a Username!");
         } else {
-            if (manager.authenticate(userName, password)) {
-                currentUser = manager.getUser(userName);
+            currentUser = new User(userName, password);
+            if (currentUser.createAccount(userName, password, manager)) {
+                JOptionPane.showMessageDialog(this, "User created successfully.");
                 new MainMenuFrame(this);
                 this.setVisible(false);
             } else {
-                failedAuthenticationHandling();
+                if (manager.authenticate(userName, password)) {
+                    currentUser = manager.getUser(userName);
+                    new MainMenuFrame(this);
+                    this.setVisible(false);
+                } else {
+                    failedAuthenticationHandling();
+                }
             }
         }
     }
@@ -162,11 +148,8 @@ public class LoginFrame extends JFrame {
                 "Exit"
         );
 
-        if (option == JOptionPane.NO_OPTION) {
-            new LoginFrame().setVisible(true);
-        } else {
+        if (option == JOptionPane.YES_OPTION) {
             System.exit(0);
-
         }
     }
 
@@ -178,7 +161,4 @@ public class LoginFrame extends JFrame {
         return manager;
     }
 
-    public static void main(String[] args) {
-        new LoginFrame();
-    }
 }

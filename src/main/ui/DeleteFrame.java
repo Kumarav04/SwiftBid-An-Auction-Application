@@ -16,13 +16,10 @@ import java.util.List;
 public class DeleteFrame extends JFrame {
     private User currentUser;
     private AuctionManager auctionManager;
-    private JTextField auctionName;
-    private JTextField auctionDescription;
     private static final String AUCTION_JSON = "./data/auctionmanager.json";
     private AuctionManagerJsonWriter auctionWriter;
     private JTextArea auctionTextArea;
 
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     public DeleteFrame(LoginFrame loginFrame) {
         auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
         AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
@@ -34,6 +31,17 @@ public class DeleteFrame extends JFrame {
 
         currentUser = loginFrame.getCurrentUser();
 
+        setFrameElements();
+
+        getContentPane().setBackground(Color.black);
+        setSize(400, 600);
+        setLayout(null);
+        setVisible(true);
+
+        removeListing();
+    }
+
+    private void setFrameElements() {
         auctionTextArea = new JTextArea();
         browseDelete();
         JScrollPane scrollPane = new JScrollPane(auctionTextArea);
@@ -48,13 +56,6 @@ public class DeleteFrame extends JFrame {
         label.setFont(new Font("Verdana", Font.PLAIN, 18));
         label.setForeground(Color.WHITE);
         add(label);
-
-        getContentPane().setBackground(Color.black);
-        setSize(400, 600);
-        setLayout(null);
-        setVisible(true);
-
-        removeListing();
     }
 
     private void auctionDisplayer(List<Auction> delAuctions) {
@@ -91,7 +92,8 @@ public class DeleteFrame extends JFrame {
     private void removeListing() {
         List<Auction> auctions = auctionManager.getAuctions();
         if (auctions == null || auctions.isEmpty()) {
-            System.out.println("No auctions available to remove.");
+            JOptionPane.showMessageDialog(this, "No Auction available to remove");
+            dispose();
         } else {
 
             String auctionNameToRemove = JOptionPane.showInputDialog(this, "Enter the name of the "
@@ -107,26 +109,31 @@ public class DeleteFrame extends JFrame {
 
     private void removeMechanism(String name) {
         List<Auction> auctions = auctionManager.getAuctions();
-        boolean auctionRemoved = false;
+        Auction auctionToRemove = null;
+
         for (Auction auction : auctions) {
             if (auction.getListingName().equalsIgnoreCase(name)) {
                 if (auction.getSeller().equals(currentUser.getUserName())) {
-                    auctionManager.removeAuction(auction);
-                    JOptionPane.showMessageDialog(this, "Auction removed successfully");
-                    auctionRemoved = true;
-                    break;
+                    auctionToRemove = auction;
+                    break;  // Found the auction to remove, exit the loop
                 } else {
                     JOptionPane.showMessageDialog(this, "Only seller can remove an auction");
+                    return;  // Exit the method, as we don't want to continue checking other auctions
                 }
             }
         }
-        if (!auctionRemoved) {
-            JOptionPane.showMessageDialog(this, "Auction not found");
 
+        if (auctionToRemove != null) {
+            auctionManager.removeAuction(auctionToRemove);
+            JOptionPane.showMessageDialog(this, "Auction removed successfully");
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Auction not found");
         }
 
         rewriteJson();
     }
+
 
     private void rewriteJson() {
         try {
@@ -138,8 +145,4 @@ public class DeleteFrame extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        LoginFrame loginframe = new LoginFrame();
-        new DeleteFrame(loginframe);
-    }
 }

@@ -2,19 +2,14 @@ package ui;
 
 import javax.swing.*;
 
-import ui.LoginFrame;
-
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 
 public class MainMenuFrame extends JFrame {
-    private LoginFrame loginFrame;
 
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     public MainMenuFrame(LoginFrame loginFrame) {
-        this.loginFrame = loginFrame;
         JLabel label = new JLabel("Welcome, " + loginFrame.getCurrentUser().getUserName());
         label.setBounds(120, 50, 300, 30);
         label.setFont(new Font("Verdana", Font.PLAIN, 18));
@@ -28,6 +23,17 @@ public class MainMenuFrame extends JFrame {
             }
         });
 
+        setButtons(loginFrame);
+
+        getContentPane().setBackground(Color.black);
+        setSize(400, 600);
+        setLayout(null);
+        setVisible(true);
+
+
+    }
+
+    private void setButtons(LoginFrame loginFrame) {
         JButton browseButton = new JButton("Browse Auctions");
         browseButton.setBounds(50, 100, 300, 20);
         browseButton.addActionListener(e -> new BrowseFrame(loginFrame));
@@ -46,26 +52,14 @@ public class MainMenuFrame extends JFrame {
 
         JButton wishlistButton = new JButton("View your wishlist");
         wishlistButton.setBounds(50, 250, 300, 20);
-        // button.addActionListener(e -> createLoginUser());
+        wishlistButton.addActionListener(e -> new WishlistFrame(loginFrame));
         add(wishlistButton);
 
         JButton exitButton = new JButton("Exit Application");
         exitButton.setBounds(50, 400, 300, 20);
         exitButton.addActionListener(e -> new ExitFrame(loginFrame));
         add(exitButton);
-
-        getContentPane().setBackground(Color.black);
-        setSize(400, 600);
-        setLayout(null);
-        setVisible(true);
-
-
     }
-
-//    public static void main(String[] args) {
-//        LoginFrame loginframe = new LoginFrame();
-//        new MainMenuFrame(loginframe);
-//    }
 
 
 }

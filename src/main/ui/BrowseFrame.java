@@ -2,33 +2,36 @@ package ui;
 
 import model.Auction;
 import model.AuctionManager;
+import model.UserManager;
 import model.User;
+import persistence.AuctionManagerJsonWriter;
 import persistence.AuctionManagerReader;
+
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 public class BrowseFrame extends JFrame {
     private LoginFrame loginFrame;
+    private UserManager manager;
     private User currentUser;
     private static final String AUCTION_JSON = "./data/auctionmanager.json";
-    private static final String USER_JSON = "./data/usermanager.json";
     private AuctionManager auctionManager;
-    private AuctionManagerReader auctionReader;
+    private AuctionManagerJsonWriter auctionWriter;
     private JTextArea auctionTextArea;
 
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
     public BrowseFrame(LoginFrame loginFrame) {
         currentUser = loginFrame.getCurrentUser();
-        auctionReader = new AuctionManagerReader(AUCTION_JSON);
+        AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
+        auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
         try {
             auctionManager = auctionReader.read();
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + AUCTION_JSON);
         }
-
 
         auctionTextArea = new JTextArea();
         browse();
@@ -39,6 +42,18 @@ public class BrowseFrame extends JFrame {
         auctionTextArea.setFont(new Font("Verdana", Font.PLAIN, 16));
         add(scrollPane);
 
+        manager = loginFrame.getManager();
+
+        setFrameElements();
+
+        getContentPane().setBackground(Color.black);
+        setSize(400, 600);
+        setLayout(null);
+        setVisible(true);
+    }
+
+    private void setFrameElements() {
+
         JLabel label = new JLabel("Current Listings");
         label.setBounds(120, 50, 300, 30);
         label.setFont(new Font("Verdana", Font.PLAIN, 18));
@@ -47,18 +62,13 @@ public class BrowseFrame extends JFrame {
 
         JButton bidButton = new JButton("Bid on a listing");
         bidButton.setBounds(220, 520, 130, 20);
-        // button.addActionListener(e -> createLoginUser());
+        bidButton.addActionListener(e -> auctionMechanism(auctionManager.getAuctions()));
         add(bidButton);
 
         JButton wishButton = new JButton("Add to wishlist");
         wishButton.setBounds(30, 520, 130, 20);
         wishButton.addActionListener(e -> wishlisting(auctionManager.getAuctions()));
         add(wishButton);
-
-        getContentPane().setBackground(Color.black);
-        setSize(400, 600);
-        setLayout(null);
-        setVisible(true);
     }
 
     private void auctionDisplayer(List<Auction> auctions) {
@@ -93,7 +103,7 @@ public class BrowseFrame extends JFrame {
                 + " auction you would like to add to your wish list");
 
         if (wishlistName != null) {
-            if (wishlistName != null && !wishlistName.trim().isEmpty()) {
+            if (!wishlistName.trim().isEmpty()) {
                 boolean auctionFound = false;
 
                 for (Auction auction : auctions) {
@@ -118,8 +128,54 @@ public class BrowseFrame extends JFrame {
 
     }
 
-//    public static void main(String[] args) {
-//        LoginFrame loginframe = new LoginFrame();
-//        new BrowseFrame(loginframe);
-//    }
+
+    private void auctionMechanism(List<Auction> auctions) {
+        String auctionToBidOn = JOptionPane.showInputDialog(this, "Enter the name of the auction"
+                + " you would like to bid on");
+        boolean auctionFound = false;
+
+        for (Auction a : auctions) {
+            if (a.getListingName().equalsIgnoreCase(auctionToBidOn)) {
+                String bidAmountString = JOptionPane.showInputDialog(this, "Enter your bid");
+                double bidAmount = Double.parseDouble(bidAmountString);
+
+                if (a.getSeller().equals(currentUser.getUserName())) {
+                    JOptionPane.showMessageDialog(this, "Seller cannot place bids on their own listings");
+                } else {
+                    verifyBid(bidAmount, a);
+                }
+
+                auctionFound = true;
+                break; // Exit the loop once the auction is found
+            }
+        }
+
+        if (!auctionFound) {
+            JOptionPane.showMessageDialog(this, "Listing not found");
+        }
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: verifies if bid is valid- if new bid is greater than current bid
+    private void verifyBid(double bidAmount, Auction auction) {
+        if (currentUser.placeBid(auction, bidAmount)) {
+            auction.updateWishlists(manager);
+            JOptionPane.showMessageDialog(this, "Successfully placed bid!");
+
+            try {
+                auctionWriter.open();
+                auctionWriter.write(auctionManager);
+                auctionWriter.close();
+            } catch (FileNotFoundException e) {
+                System.out.println("Unable to write to file: " + AUCTION_JSON);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to Place Bid. Your bid must be higher "
+                    + "than the current highest bid.");
+        }
+    }
+
+
 }
