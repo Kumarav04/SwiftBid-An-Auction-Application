@@ -31,6 +31,7 @@ public class WishlistFrame extends JFrame {
 
     // EFFECTS: Creates a new frame for users' wish list
     public WishlistFrame(LoginFrame loginFrame) {
+        this.loginFrame = loginFrame;
         currentUser = loginFrame.getCurrentUser();
         userReader = new UserManagerReader(USER_JSON);
         userWriter = new UserManagerJsonWriter(USER_JSON);
@@ -137,6 +138,8 @@ public class WishlistFrame extends JFrame {
                     System.out.println("Unable to write to file: " + AUCTION_JSON);
                 }
             }
+            dispose();
+            new WishlistFrame(loginFrame);
         } else {
             JOptionPane.showMessageDialog(this, "Auction not found");
 

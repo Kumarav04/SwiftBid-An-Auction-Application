@@ -23,8 +23,9 @@ public class BrowseFrame extends JFrame {
     private AuctionManagerJsonWriter auctionWriter;
     private JTextArea auctionTextArea;
 
-    // EFFECTS: Creates a new frame with a scroll pane for the user to browse through currently active listings
+    // EFFECTS: Creates a new frame for the user to browse through currently active listings, bid and to wish list.
     public BrowseFrame(LoginFrame loginFrame) {
+        this.loginFrame = loginFrame;
         currentUser = loginFrame.getCurrentUser();
         AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
         auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
@@ -34,14 +35,6 @@ public class BrowseFrame extends JFrame {
             System.out.println("Unable to read from file: " + AUCTION_JSON);
         }
 
-        auctionTextArea = new JTextArea();
-        browse();
-        JScrollPane scrollPane = new JScrollPane(auctionTextArea);
-        scrollPane.setBounds(20, 100, 360, 400);
-        auctionTextArea.setForeground(Color.WHITE);
-        auctionTextArea.setBackground(Color.black);
-        auctionTextArea.setFont(new Font("Verdana", Font.PLAIN, 16));
-        add(scrollPane);
 
         manager = loginFrame.getManager();
 
@@ -55,8 +48,16 @@ public class BrowseFrame extends JFrame {
     }
 
     // MODIFIES: this
-    // EFFECTS: Sets title and buttons on the frame
+    // EFFECTS: Sets title, buttons and scroll pane on the frame
     private void setFrameElements() {
+        auctionTextArea = new JTextArea();
+        browse();
+        JScrollPane scrollPane = new JScrollPane(auctionTextArea);
+        scrollPane.setBounds(20, 100, 360, 400);
+        auctionTextArea.setForeground(Color.WHITE);
+        auctionTextArea.setBackground(Color.black);
+        auctionTextArea.setFont(new Font("Verdana", Font.PLAIN, 16));
+        add(scrollPane);
 
         JLabel label = new JLabel("Current Listings");
         label.setBounds(120, 50, 300, 30);
@@ -140,25 +141,41 @@ public class BrowseFrame extends JFrame {
                 + " you would like to bid on");
         boolean auctionFound = false;
 
-        for (Auction a : auctions) {
-            if (a.getListingName().equalsIgnoreCase(auctionToBidOn)) {
-                String bidAmountString = JOptionPane.showInputDialog(this, "Enter your bid");
-                double bidAmount = Double.parseDouble(bidAmountString);
-
-                if (a.getSeller().equals(currentUser.getUserName())) {
-                    JOptionPane.showMessageDialog(this, "Seller cannot place bids on their own listings");
-                } else {
-                    verifyBid(bidAmount, a);
-                }
-
-                auctionFound = true;
-                break;
-            }
-        }
+        auctionFound = isAuctionFound(auctions, auctionToBidOn, auctionFound);
 
         if (!auctionFound) {
             JOptionPane.showMessageDialog(this, "Listing not found");
         }
+    }
+
+    // EFFECTS: Makes sure the user inputs a valid value as a bid
+    private boolean isAuctionFound(List<Auction> auctions, String auctionToBidOn, boolean auctionFound) {
+        for (Auction a : auctions) {
+            double bidAmount = 0;
+            if (a.getListingName().equalsIgnoreCase(auctionToBidOn)) {
+                String bidAmountString = JOptionPane.showInputDialog(this, "Enter your bid");
+                if (!bidAmountString.isBlank()) {
+                    try {
+                        bidAmount = Double.parseDouble(bidAmountString);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Please enter a valid bid");
+                    }
+
+                    if (a.getSeller().equals(currentUser.getUserName())) {
+                        JOptionPane.showMessageDialog(this, "Seller cannot place bids on their own listings");
+                    } else {
+                        verifyBid(bidAmount, a);
+                    }
+
+                    auctionFound = true;
+                    break;
+                } else {
+                    JOptionPane.showMessageDialog(this, "Please enter a valid bid");
+                }
+
+            }
+        }
+        return auctionFound;
     }
 
 
@@ -176,6 +193,8 @@ public class BrowseFrame extends JFrame {
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to write to file: " + AUCTION_JSON);
             }
+            dispose();
+            new BrowseFrame(loginFrame);
 
         } else {
             JOptionPane.showMessageDialog(this, "Failed to Place Bid. Your bid must be higher "

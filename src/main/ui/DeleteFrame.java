@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteFrame extends JFrame {
+    private LoginFrame loginFrame;
     private User currentUser;
     private AuctionManager auctionManager;
     private static final String AUCTION_JSON = "./data/auctionmanager.json";
@@ -22,6 +23,7 @@ public class DeleteFrame extends JFrame {
 
     // EFFECTS: Creates a new frame allowing users to delete listings posted by them.
     public DeleteFrame(LoginFrame loginFrame) {
+        this.loginFrame = loginFrame;
         auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
         AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
         try {
@@ -135,12 +137,12 @@ public class DeleteFrame extends JFrame {
         if (auctionToRemove != null) {
             auctionManager.removeAuction(auctionToRemove);
             JOptionPane.showMessageDialog(this, "Auction removed successfully");
+            rewriteJson();
             dispose();
+            new DeleteFrame(loginFrame);
         } else {
             JOptionPane.showMessageDialog(this, "Auction not found");
         }
-
-        rewriteJson();
     }
 
 
