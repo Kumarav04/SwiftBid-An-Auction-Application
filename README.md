@@ -53,23 +53,23 @@ the buyers and the sellers.
 
 ## **Instructions for grader**
 
-- You can generate the first required action related to the user story "adding multiple Xs to a Y"
+- You can generate the first required action related to the user story "post a new classified"
 by clicking on the "Post a new Auction" button in the main menu after logging into an existing account
 or creating a new account. This will post a new auction by the user onto a list of all currently active listings.
-
-- You can generate the second required action related to the user story "adding multiple Xs to a Y"
+####
+- You can generate the second required action related to the user story "view all the classifieds"
 by clicking on the "Browse Auctions" button in the main menu after logging into an existing account
 or creating a new account. This will display all currently active listings. The user can also save auctions
 to their wish list and click on "View your wishlist" button in the main menu to display the auctions in their
 wish list.
-
+####
 - The visual component, SwiftBid logo in this case, can be found in the login page that 
 is first displayed when the program is run.
-
+####
 - You can save the state of my application by clicking the appropriate option on the pop-up window that appears
 when the user clicks on the "X" button in the top right corner of the main menu window, or the dedicated
 "Exit application" button in the bottom of the main menu.
-
+####
 - You can reload the state of my application by logging into a saved account using the correct credentials which were 
 used while creating the account. This will allow the user to load their saved wish list by clicking on 
 "View your wish list".
