@@ -57,11 +57,13 @@ the buyers and the sellers.
 by clicking on the "Post a new Auction" button in the main menu after logging into an existing account
 or creating a new account. This will post a new auction by the user onto a list of all currently active listings.
 
-- You can generate the second required action related to the user story "viewing a list of X in Y"
+- You can generate the second required action related to the user story "adding multiple Xs to a Y"
 by clicking on the "Browse Auctions" button in the main menu after logging into an existing account
-or creating a new account. This will display all currently active listings.
+or creating a new account. This will display all currently active listings. The user can also save auctions
+to their wish list and click on "View your wishlist" button in the main menu to display the auctions in their
+wish list.
 
-- The visual component, SwiftBid logo with slogan in this case, can be found in the log in page that 
+- The visual component, SwiftBid logo in this case, can be found in the login page that 
 is first displayed when the program is run.
 
 - You can save the state of my application by clicking the appropriate option on the pop-up window that appears

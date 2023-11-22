@@ -119,7 +119,7 @@ public class WishlistFrame extends JFrame {
     }
 
     // MODIFIES: currentUser, manager
-    // EFFECTS: Handles the deleting mechanism and wites updated auctionManager into JSON file
+    // EFFECTS: Handles the deleting mechanism and writes updated auctionManager into JSON file
     private void wishlistsHelper(List<Auction> wishlist, String wishlistName, List<Auction> itemsToRemove) {
         for (Auction auction : wishlist) {
             if (auction.getListingName().equalsIgnoreCase(wishlistName)) {
