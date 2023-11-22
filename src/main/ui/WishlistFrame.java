@@ -29,6 +29,7 @@ public class WishlistFrame extends JFrame {
     private AuctionManagerJsonWriter auctionWriter;
     private JTextArea auctionTextArea;
 
+    // EFFECTS: Creates a new frame for users' wish list
     public WishlistFrame(LoginFrame loginFrame) {
         currentUser = loginFrame.getCurrentUser();
         userReader = new UserManagerReader(USER_JSON);
@@ -48,6 +49,8 @@ public class WishlistFrame extends JFrame {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets all the frame elements in the frame
     private void setFrameElements() {
         auctionTextArea = new JTextArea();
         browseWishlist();
@@ -70,11 +73,13 @@ public class WishlistFrame extends JFrame {
         add(wishlistButton);
 
         getContentPane().setBackground(Color.black);
+        setResizable(false);
         setSize(400, 600);
         setLayout(null);
         setVisible(true);
     }
 
+    // EFFECTS: Displays a single auction with appropriate labels from a list of auctions
     private void auctionDisplayer(java.util.List<Auction> auctions) {
         StringBuilder auctionInfo = new StringBuilder();
         for (Auction auction : auctions) {
@@ -90,7 +95,7 @@ public class WishlistFrame extends JFrame {
     }
 
 
-    // EFFECTS: Displays all the listings currently posted
+    // EFFECTS: Displays all the listings currently in the waitlists
     private void browseWishlist() {
         List<Auction> wishlist = currentUser.getWishlist();
         if (wishlist.isEmpty()) {
@@ -100,6 +105,7 @@ public class WishlistFrame extends JFrame {
         }
     }
 
+    // EFFECTS: Deletes a listing from the user's wish list
     private void wishlistDeleting() {
         List<Auction> wishlist = currentUser.getWishlist();
         String wishlistName = JOptionPane.showInputDialog(this, "Enter the name of the auction"
@@ -111,6 +117,8 @@ public class WishlistFrame extends JFrame {
 
     }
 
+    // MODIFIES: currentUser, manager
+    // EFFECTS: Handles the deleting mechanism and wites updated auctionManager into JSON file
     private void wishlistsHelper(List<Auction> wishlist, String wishlistName, List<Auction> itemsToRemove) {
         for (Auction auction : wishlist) {
             if (auction.getListingName().equalsIgnoreCase(wishlistName)) {

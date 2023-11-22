@@ -279,7 +279,7 @@ public class SwiftBidApp {
     }
 
     // MODIFIES: this
-    // EFFECTS:
+    // EFFECTS: removes an auction from the current listings
     private void removeMechanism(String name) {
         List<Auction> auctions = auctionManager.getAuctions();
         boolean auctionRemoved = false;

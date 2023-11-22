@@ -18,6 +18,8 @@ public class UserTest {
     private Auction sampleAuction1;
     private Auction sampleAuction2;
     private Auction sampleAuction3;
+    private Auction sampleAuction4;
+
 
 
     @BeforeEach
@@ -29,8 +31,11 @@ public class UserTest {
         sampleAuction1 = new Auction("newListing1", testUser, "newDesc1");
         sampleAuction2 = new Auction("newListing2", testUser, "newDesc2");
         sampleAuction3 = new Auction("newListing3", testUser, "newDesc3");
+        sampleAuction4 = new Auction("newListing1", testUser, "newDesc3");
+
         testAuctionManager.addAuction(sampleAuction1);
         testAuctionManager.addAuction(sampleAuction2);
+        testAuctionManager.addAuction(sampleAuction4);
     }
 
     @Test
@@ -42,7 +47,7 @@ public class UserTest {
     @Test
     void testCreateListing() {
         assertTrue(testUser.createListing("New Auction","DemoDescription", testAuctionManager));
-        assertEquals(3, testAuctionManager.getAuctions().size());
+        assertEquals(4, testAuctionManager.getAuctions().size());
     }
 
     @Test
@@ -90,6 +95,13 @@ public class UserTest {
         assertFalse(testUser.addToWishList(sampleAuction3, testAuctionManager.getAuctions()));
 
 
+    }
+
+    @Test
+    public void testAddObjectWithSameName() {
+        assertTrue(testUser.addToWishList(sampleAuction1, testAuctionManager.getAuctions()));
+        assertTrue(testUser.addToWishList(sampleAuction2, testAuctionManager.getAuctions()));
+        assertFalse(testUser.addToWishList(sampleAuction4, testAuctionManager.getAuctions()));
     }
 
     @Test

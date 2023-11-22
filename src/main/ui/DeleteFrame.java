@@ -20,6 +20,7 @@ public class DeleteFrame extends JFrame {
     private AuctionManagerJsonWriter auctionWriter;
     private JTextArea auctionTextArea;
 
+    // EFFECTS: Creates a new frame allowing users to delete listings posted by them.
     public DeleteFrame(LoginFrame loginFrame) {
         auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
         AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
@@ -34,6 +35,7 @@ public class DeleteFrame extends JFrame {
         setFrameElements();
 
         getContentPane().setBackground(Color.black);
+        setResizable(false);
         setSize(400, 600);
         setLayout(null);
         setVisible(true);
@@ -41,6 +43,8 @@ public class DeleteFrame extends JFrame {
         removeListing();
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets scroll plane and title for the frame.
     private void setFrameElements() {
         auctionTextArea = new JTextArea();
         browseDelete();
@@ -58,6 +62,7 @@ public class DeleteFrame extends JFrame {
         add(label);
     }
 
+    // EFFECTS: Displays a single auction with appropriate labels from a list of auctions
     private void auctionDisplayer(List<Auction> delAuctions) {
         StringBuilder auctionInfo = new StringBuilder();
         for (Auction auction : delAuctions) {
@@ -73,7 +78,7 @@ public class DeleteFrame extends JFrame {
     }
 
 
-    // EFFECTS: Displays all the listings currently posted
+    // EFFECTS: Displays all the listings currently posted by the current user.
     private void browseDelete() {
         List<Auction> auctions = auctionManager.getAuctions();
         List<Auction> delAuction = new ArrayList<>();
@@ -89,6 +94,8 @@ public class DeleteFrame extends JFrame {
         }
     }
 
+    // MODIFIES: auctionManager
+    // EFFECTS: removes a listing from list of all auctions only if the seller tries to remove it.
     private void removeListing() {
         List<Auction> auctions = auctionManager.getAuctions();
         if (auctions == null || auctions.isEmpty()) {
@@ -107,6 +114,8 @@ public class DeleteFrame extends JFrame {
 
     }
 
+    // MODIFIES: auctionManager
+    // EFFECTS: removes an auction from the current listings
     private void removeMechanism(String name) {
         List<Auction> auctions = auctionManager.getAuctions();
         Auction auctionToRemove = null;
@@ -135,6 +144,7 @@ public class DeleteFrame extends JFrame {
     }
 
 
+    // EFFECTS: Writes updated auctionManager into JSON file
     private void rewriteJson() {
         try {
             auctionWriter.open();

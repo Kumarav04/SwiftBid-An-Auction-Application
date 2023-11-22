@@ -69,7 +69,14 @@ public class User implements Writable {
         boolean wishlisted = false;
         for (Auction a : auctions) {
             if (a.equals(auction)) {
-                if (!wishList.contains(auction)) {
+                boolean alreadyWishlisted = false;
+                for (Auction aw : wishList) {
+                    if (auction.getListingName().equalsIgnoreCase(aw.getListingName())) {
+                        alreadyWishlisted = true;
+                        break;
+                    }
+                }
+                if (!alreadyWishlisted) {
                     wishList.add(auction);
                     wishlisted = true;
                 }
@@ -77,6 +84,7 @@ public class User implements Writable {
         }
         return wishlisted;
     }
+
 
     // MODIFIES: this
     // EFFECTS: removes auction from wishlist

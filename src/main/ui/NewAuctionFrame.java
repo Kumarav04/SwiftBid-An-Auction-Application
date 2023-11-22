@@ -19,6 +19,7 @@ public class NewAuctionFrame extends JFrame {
     private static final String AUCTION_JSON = "./data/auctionmanager.json";
     private AuctionManagerJsonWriter auctionWriter;
 
+    // EFFECTS: Creates a new frame that allows the user to post a new auction
     public NewAuctionFrame(LoginFrame loginFrame) {
         auctionWriter = new AuctionManagerJsonWriter(AUCTION_JSON);
         AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
@@ -39,40 +40,42 @@ public class NewAuctionFrame extends JFrame {
         postAuction();
 
         getContentPane().setBackground(Color.black);
+        setResizable(false);
         setSize(400, 600);
         setLayout(null);
         setVisible(true);
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets all the elements of the frame into the frame.
     private void postAuction() {
         JLabel nameLabel = new JLabel("Name of Auction: ", JLabel.RIGHT);
-        JLabel passwordLabel = new JLabel("Description: ", JLabel.CENTER);
+        JLabel descriptionLabel = new JLabel("Description: ", JLabel.CENTER);
         auctionName = new JTextField(6);
         auctionDescription = new JTextField(6);
         nameLabel.setBounds(20, 300, 120, 25);
-        passwordLabel.setBounds(55, 330, 80, 25);
+        descriptionLabel.setBounds(55, 330, 80, 25);
         auctionName.setBounds(140, 300, 165, 25);
         auctionDescription.setBounds(140, 330, 165, 25);
 
-        // Set foreground color for login components
         nameLabel.setForeground(Color.WHITE);
-        passwordLabel.setForeground(Color.WHITE);
+        descriptionLabel.setForeground(Color.WHITE);
 
-        //  create button
         JButton button = new JButton("Post Auction");
 
         button.setBounds(100, 400, 200, 20);
         button.addActionListener(e -> postListing());
 
-        // adding button on frame
         add(nameLabel);
-        add(passwordLabel);
+        add(descriptionLabel);
         add(auctionName);
         add(auctionDescription);
         add(button);
     }
 
+    // MODIFIES: auctionManager
+    // EFFECTS: Creates a new listing from currentUser
     private void postListing() {
         boolean postStatus = true;
         String nameofAuction = auctionName.getText();
@@ -96,6 +99,7 @@ public class NewAuctionFrame extends JFrame {
 
     }
 
+    // EFFECTS: Writes updated auctionManager into JSON file
     private void saveChanges() {
         try {
             auctionWriter.open();

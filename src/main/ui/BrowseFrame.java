@@ -23,6 +23,7 @@ public class BrowseFrame extends JFrame {
     private AuctionManagerJsonWriter auctionWriter;
     private JTextArea auctionTextArea;
 
+    // EFFECTS: Creates a new frame with a scroll pane for the user to browse through currently active listings
     public BrowseFrame(LoginFrame loginFrame) {
         currentUser = loginFrame.getCurrentUser();
         AuctionManagerReader auctionReader = new AuctionManagerReader(AUCTION_JSON);
@@ -47,11 +48,14 @@ public class BrowseFrame extends JFrame {
         setFrameElements();
 
         getContentPane().setBackground(Color.black);
+        setResizable(false);
         setSize(400, 600);
         setLayout(null);
         setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: Sets title and buttons on the frame
     private void setFrameElements() {
 
         JLabel label = new JLabel("Current Listings");
@@ -71,6 +75,7 @@ public class BrowseFrame extends JFrame {
         add(wishButton);
     }
 
+    // EFFECTS: Displays a single auction with appropriate labels from a list of auctions
     private void auctionDisplayer(List<Auction> auctions) {
         StringBuilder auctionInfo = new StringBuilder();
         for (Auction auction : auctions) {
@@ -96,7 +101,8 @@ public class BrowseFrame extends JFrame {
         }
     }
 
-    @SuppressWarnings({"checkstyle:MethodLength", "checkstyle:SuppressWarnings"})
+    // MODIFIES: currentUser
+    // EFFECTS: Adds an item to currentUser's wishlist if not already added.
     private void wishlisting(List<Auction> auctions) {
 
         String wishlistName = JOptionPane.showInputDialog(this, "Enter the name of the "
@@ -128,7 +134,7 @@ public class BrowseFrame extends JFrame {
 
     }
 
-
+    // EFFECTS: handles auction and bidding mechanism
     private void auctionMechanism(List<Auction> auctions) {
         String auctionToBidOn = JOptionPane.showInputDialog(this, "Enter the name of the auction"
                 + " you would like to bid on");
@@ -146,7 +152,7 @@ public class BrowseFrame extends JFrame {
                 }
 
                 auctionFound = true;
-                break; // Exit the loop once the auction is found
+                break;
             }
         }
 
@@ -156,7 +162,7 @@ public class BrowseFrame extends JFrame {
     }
 
 
-    // MODIFIES: this
+    // MODIFIES: currentUser, manager, auctionManager
     // EFFECTS: verifies if bid is valid- if new bid is greater than current bid
     private void verifyBid(double bidAmount, Auction auction) {
         if (currentUser.placeBid(auction, bidAmount)) {

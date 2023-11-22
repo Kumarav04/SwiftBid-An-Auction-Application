@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 
 public class MainMenuFrame extends JFrame {
 
+    // EFFECTS: Creates a frame with main menu giving user different options
     public MainMenuFrame(LoginFrame loginFrame) {
         JLabel label = new JLabel("Welcome, " + loginFrame.getCurrentUser().getUserName());
         label.setBounds(120, 50, 300, 30);
@@ -26,6 +27,7 @@ public class MainMenuFrame extends JFrame {
         setButtons(loginFrame);
 
         getContentPane().setBackground(Color.black);
+        setResizable(false);
         setSize(400, 600);
         setLayout(null);
         setVisible(true);
@@ -33,6 +35,8 @@ public class MainMenuFrame extends JFrame {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets all the buttons for different actions in MainMenuFrame
     private void setButtons(LoginFrame loginFrame) {
         JButton browseButton = new JButton("Browse Auctions");
         browseButton.setBounds(50, 100, 300, 20);
@@ -50,7 +54,7 @@ public class MainMenuFrame extends JFrame {
         deleteButton.addActionListener(e -> new DeleteFrame(loginFrame));
         add(deleteButton);
 
-        JButton wishlistButton = new JButton("View your wishlist");
+        JButton wishlistButton = new JButton("View your Wish list");
         wishlistButton.setBounds(50, 250, 300, 20);
         wishlistButton.addActionListener(e -> new WishlistFrame(loginFrame));
         add(wishlistButton);

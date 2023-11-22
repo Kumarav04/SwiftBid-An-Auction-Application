@@ -12,6 +12,7 @@ public class ExitFrame extends JFrame {
     private UserManager manager;
     private UserManagerJsonWriter userWriter;
 
+    // EFFECTS: Opens an option dialogue asking the user to save before exiting.
     public ExitFrame(LoginFrame loginFrame) {
         userWriter = new UserManagerJsonWriter(USER_JSON);
 
@@ -19,7 +20,8 @@ public class ExitFrame extends JFrame {
 
         int option = JOptionPane.showOptionDialog(
                 this,
-                "Would you like to save your account and related changes before exiting?",
+                "Would you like to save your account and related changes before exiting?"
+                + "\nThis includes changes to your wishlist, and latest updates to the auctions in your wishlist.",
                 "Exiting Application",
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE,
@@ -31,6 +33,8 @@ public class ExitFrame extends JFrame {
         exitMechanism(option);
     }
 
+    // MODIFIES: manager
+    // EFFECTS: Saves the changes by writing manager into JSON file if the user chooses to do so
     private void exitMechanism(int option) {
         if (option == JOptionPane.NO_OPTION) {
             System.exit(0);
