@@ -28,6 +28,7 @@ public class AuctionManager implements Writable {
     // EFFECTS: removes an Auction from the list of existing auctions
     public void removeAuction(Auction auction) {
         auctions.remove(auction);
+        EventLog.getInstance().logEvent(new Event("Auction " + auction.getListingName() + " removed!"));
     }
 
 

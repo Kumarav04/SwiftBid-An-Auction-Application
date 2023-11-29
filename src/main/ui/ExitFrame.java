@@ -1,5 +1,7 @@
 package ui;
 
+import model.Event;
+import model.EventLog;
 import model.UserManager;
 import persistence.UserManagerJsonWriter;
 
@@ -33,10 +35,14 @@ public class ExitFrame extends JFrame {
         exitMechanism(option);
     }
 
+
     // MODIFIES: manager
     // EFFECTS: Saves the changes by writing manager into JSON file if the user chooses to do so
     private void exitMechanism(int option) {
         if (option == JOptionPane.NO_OPTION) {
+            for (Event e : EventLog.getInstance()) {
+                System.out.println(e);
+            }
             System.exit(0);
         } else {
             try {
@@ -46,6 +52,9 @@ public class ExitFrame extends JFrame {
                 JOptionPane.showMessageDialog(this, "Changes saved successfully.");
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to write to file: " + USER_JSON);
+            }
+            for (Event e : EventLog.getInstance()) {
+                System.out.println(e);
             }
             System.exit(0);
 

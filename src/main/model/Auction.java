@@ -69,6 +69,7 @@ public class Auction implements Writable {
         if (bid > highestBid) {
             setHighestBidder(bidder);
             setHighestBid(bid);
+            EventLog.getInstance().logEvent(new Event("New Bid placed on Auction " + this.getListingName()));
             return true;
         } else {
             return false;

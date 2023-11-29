@@ -32,6 +32,7 @@ public class User implements Writable {
             this.userName = name;
             this.passWord = pass;
             userManager.addUser(this);
+            EventLog.getInstance().logEvent(new Event("New user created! Username: " + this.userName));
             return true;
         }
     }
@@ -53,6 +54,7 @@ public class User implements Writable {
     public boolean createListing(String listingName, String description, AuctionManager listingManager) {
         Auction newAuction = new Auction(listingName, this, description);
         listingManager.addAuction(newAuction);
+        EventLog.getInstance().logEvent(new Event("New Auction Posted! Auction name: " + listingName));
         return true;
     }
 
@@ -78,6 +80,8 @@ public class User implements Writable {
                 }
                 if (!alreadyWishlisted) {
                     wishList.add(auction);
+                    EventLog.getInstance().logEvent(new Event("Auction " + auction.getListingName() + " added "
+                            + "to user's wishlist!"));
                     wishlisted = true;
                 }
             }
@@ -101,6 +105,8 @@ public class User implements Writable {
 
         if (removed) {
             wishList.removeAll(itemsToRemove);
+            EventLog.getInstance().logEvent(new Event("Auction " + auction.getListingName() + " removed "
+                    + "from user's wishlist!"));
         }
 
         return removed;

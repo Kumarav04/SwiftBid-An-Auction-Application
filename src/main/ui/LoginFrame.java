@@ -53,6 +53,7 @@ public class LoginFrame extends JFrame {
 
         getContentPane().setBackground(Color.black);
         setSize(400, 600);
+        setLocationRelativeTo(null);
         setLayout(null);
         setResizable(false);
         setVisible(true);

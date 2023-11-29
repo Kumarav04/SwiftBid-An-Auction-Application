@@ -32,6 +32,7 @@ public class UserManager implements Writable {
         for (User user  : allUsers) {
             if (user.getUserName().equals(username)) {
                 if (user.getPassWord().equals(password)) {
+                    EventLog.getInstance().logEvent(new Event("User Authenticated! Username: " + username));
                     return true;
                 }
             }
@@ -65,6 +66,7 @@ public class UserManager implements Writable {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("allUsers", usersToJson());
+        EventLog.getInstance().logEvent(new Event("Changes to user account saved!"));
         return json;
     }
 

@@ -74,3 +74,36 @@ when the user clicks on the "X" button in the top right corner of the main menu 
 used while creating the account. This will allow the user to load their saved wish list by clicking on 
 "View your wish list".
 
+## **Phase 4: Task 2**
+
+Sample of Logged Events:
+
+``Wed Nov 29 00:04:08 PST 2023``<br>
+``User Authenticated! Username: Kumar``<br>
+``Wed Nov 29 00:04:16 PST 2023``<br>
+``New Bid placed on Auction Boat``<br>
+``Wed Nov 29 00:04:24 PST 2023``<br>
+``Auction Boat added to user's wishlist!``<br>
+``Wed Nov 29 00:04:41 PST 2023``<br>
+``New Auction Posted! Auction name: Car``<br>
+``Wed Nov 29 00:05:03 PST 2023``<br>
+``New Auction Posted! Auction name: Headphones``<br>
+``Wed Nov 29 00:05:09 PST 2023``<br>
+``Auction Headphones removed!``<br>
+``Wed Nov 29 00:05:16 PST 2023``<br>
+``Changes to user account saved!``
+
+``Process finished with exit code 0``
+
+## **Phase 4: Task 3**
+
+- I would reduce repetitive use of code across different classes in my UI package
+by creating an abstract superclass than handles the repetitive functions and call 
+the methods in the abstract class whenever necessary. This would improve the
+cohesion of my code. Additionally, I would add one or more interfaces/abstract classes in my model and persistence packages to reduce coupling and the code easier to read.
+
+- The next thing I would do is implementing the Singleton Design Pattern for my LoginFrame
+class in UI Package. This is the frame that initializes the application and acts as
+a foundation for all the other functions, and it would make sense for it to be initialized
+only once in every instance the application is started.
+

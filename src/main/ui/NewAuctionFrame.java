@@ -57,7 +57,7 @@ public class NewAuctionFrame extends JFrame {
         nameLabel.setBounds(20, 300, 120, 25);
         descriptionLabel.setBounds(55, 330, 80, 25);
         auctionName.setBounds(140, 300, 165, 25);
-        auctionDescription.setBounds(140, 330, 165, 25);
+        auctionDescription.setBounds(140, 330, 165, 45);
 
         nameLabel.setForeground(Color.WHITE);
         descriptionLabel.setForeground(Color.WHITE);
