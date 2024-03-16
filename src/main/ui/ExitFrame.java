@@ -53,7 +53,7 @@ public class ExitFrame extends JFrame {
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to write to file: " + USER_JSON);
             }
-            for (Event e : EventLog.getInstance()) {
+            for (Event e : EventLog.getInstance()) {    
                 System.out.println(e);
             }
             System.exit(0);
