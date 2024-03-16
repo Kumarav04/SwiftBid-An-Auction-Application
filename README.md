@@ -1,7 +1,7 @@
 # SwiftBid
 ## *Auctions Simplified*.
 
-###CPSC 210 2023W1
+**CPSC 210 2023W1**
 ___
 **SwiftBid** is an application that enables 
 users to easily list products for auction, place bids,
